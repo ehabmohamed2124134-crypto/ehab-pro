@@ -651,5 +651,402 @@ render();drawWheel();
 </script>
 <!-- End Ehab Pro VIP + Assistant -->
 
+<!-- Ehab Pro Useful Tools Add-on -->
+<style>
+#ep-tools{--ep-card:#10203d;--ep-line:#294267;color:var(--text,#f4f8ff);font-family:Tahoma,Arial,sans-serif;margin:24px auto;max-width:1050px;padding:12px}
+#ep-tools *{box-sizing:border-box}
+#ep-tools .ep-panel{background:var(--ep-card);border:1px solid var(--ep-line);border-radius:15px;padding:15px;margin:12px 0}
+#ep-tools .ep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+#ep-tools .ep-input{width:100%;padding:10px;margin:5px 0;border-radius:9px;border:1px solid var(--ep-line);background:#071329;color:white}
+#ep-tools .ep-btn{border:0;border-radius:9px;padding:10px 13px;margin:4px 2px;background:#168bff;color:white;font-weight:bold;cursor:pointer}
+#ep-tools .ep-btn.alt{background:#263b5b}
+#ep-tools .ep-btn:disabled{opacity:.5}
+#ep-tools .ep-muted{opacity:.8;font-size:13px}
+#ep-tools .ep-item{padding:10px 0;border-bottom:1px solid var(--ep-line);overflow-wrap:anywhere}
+#ep-tools .ep-item:last-child{border-bottom:0}
+#ep-tools .ep-number{font-size:24px;font-weight:bold;color:#00d5ff}
+#ep-tools .ep-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+#ep-tools .ep-tab{background:#172c4d;color:white;border:1px solid #294267;border-radius:9px;padding:9px;cursor:pointer}
+#ep-tools .ep-tab.active{background:#168bff}
+#ep-tools .ep-view{display:none}
+#ep-tools .ep-view.active{display:block}
+#ep-tools .ep-progress{height:9px;background:#263955;border-radius:20px;overflow:hidden}
+#ep-tools .ep-progress span{display:block;height:100%;background:#00d5ff;width:0}
+#ep-tools .ep-big{font-size:32px;font-weight:bold;text-align:center;margin:14px}
+#ep-tools .ep-type-text{font-size:18px;line-height:2;background:#071329;padding:12px;border-radius:10px;overflow-wrap:anywhere}
+@media(max-width:450px){#ep-tools{padding:5px}#ep-tools .ep-panel{padding:11px}}
+</style>
+
+<section id="ep-tools">
+  <div class="ep-panel">
+    <h2>🚀 مركز الأدوات المفيدة — Ehab Pro</h2>
+    <p class="ep-muted">إضافات مستقلة عن الألعاب القديمة. بياناتها تُحفظ على هذا المتصفح.</p>
+    <div class="ep-grid">
+      <div class="ep-panel">
+        <div>📚 مهام المذاكرة المكتملة</div>
+        <div class="ep-number" id="ep-study-stat">0</div>
+      </div>
+      <div class="ep-panel">
+        <div>📝 الملاحظات المحفوظة</div>
+        <div class="ep-number" id="ep-notes-stat">0</div>
+      </div>
+      <div class="ep-panel">
+        <div>💰 صافي المصروفات المسجلة</div>
+        <div class="ep-number" id="ep-money-stat">0</div>
+        <small>جنيه</small>
+      </div>
+      <div class="ep-panel">
+        <div>🏆 شارات الأدوات الجديدة</div>
+        <div class="ep-number" id="ep-badges-stat">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ep-tabs">
+    <button class="ep-tab active" data-ep-tab="study">📚 المذاكرة</button>
+    <button class="ep-tab" data-ep-tab="money">💰 التوفير</button>
+    <button class="ep-tab" data-ep-tab="notes">📝 الملاحظات</button>
+    <button class="ep-tab" data-ep-tab="typing">⌨️ سرعة الكتابة</button>
+    <button class="ep-tab" data-ep-tab="tools">🧮 الأدوات</button>
+    <button class="ep-tab" data-ep-tab="badges">🏆 الإنجازات</button>
+    <button class="ep-tab" data-ep-tab="backup">💾 النسخة الاحتياطية</button>
+  </div>
+
+  <!-- STUDY PLANNER -->
+  <div class="ep-view active" data-ep-view="study">
+    <div class="ep-panel">
+      <h3>📚 منظم المذاكرة</h3>
+      <p class="ep-muted">اكتب المادة والمهمة وحدد موعدها، وبعد الانتهاء علّمها كمكتملة.</p>
+      <input class="ep-input" id="ep-subject" placeholder="المادة: رياضيات، علوم، عربي...">
+      <input class="ep-input" id="ep-task" placeholder="المطلوب مذاكرته">
+      <input class="ep-input" id="ep-task-date" type="date" aria-label="موعد المهمة">
+      <button class="ep-btn" id="ep-add-task">＋ أضف مهمة</button>
+      <div id="ep-study-list"></div>
+    </div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="ep-view" data-ep-view="money">
+    <div class="ep-panel">
+      <h3>💰 المصروف والتوفير</h3>
+      <label for="ep-budget">هدف التوفير بالجنيه</label>
+      <input class="ep-input" id="ep-budget" type="number" min="0" placeholder="مثال: 500">
+      <button class="ep-btn" id="ep-save-budget">حفظ هدف التوفير</button>
+      <div class="ep-item">💵 إجمالي الفلوس الداخلة: <b id="ep-income">0</b> جنيه</div>
+      <div class="ep-item">🛍️ إجمالي المصروفات: <b id="ep-expenses">0</b> جنيه</div>
+      <div class="ep-item">🏦 المتبقي: <b id="ep-balance">0</b> جنيه</div>
+      <div class="ep-progress"><span id="ep-budget-bar"></span></div>
+      <p id="ep-budget-text" class="ep-muted"></p>
+      <hr>
+      <select class="ep-input" id="ep-money-kind">
+        <option value="expense">مصروف — فلوس خرجت</option>
+        <option value="income">إضافة — فلوس دخلت</option>
+      </select>
+      <input class="ep-input" id="ep-money-amount" type="number" min="0.01" step="0.01" placeholder="المبلغ بالجنيه">
+      <input class="ep-input" id="ep-money-note" maxlength="80" placeholder="السبب: مواصلات، مصروف، توفير...">
+      <button class="ep-btn" id="ep-add-money">＋ سجّل العملية</button>
+      <div id="ep-money-list"></div>
+      <button class="ep-btn alt" id="ep-clear-money">مسح سجل المصروفات فقط</button>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="ep-view" data-ep-view="notes">
+    <div class="ep-panel">
+      <h3>📝 دفتر الملاحظات</h3>
+      <input class="ep-input" id="ep-note-title" maxlength="80" placeholder="عنوان الملاحظة">
+      <textarea class="ep-input" id="ep-note-body" rows="5" maxlength="5000" placeholder="اكتب أفكارك أو ملاحظات الدروس هنا..."></textarea>
+      <button class="ep-btn" id="ep-save-note">💾 احفظ الملاحظة</button>
+      <div id="ep-notes-list"></div>
+    </div>
+  </div>
+
+  <!-- TYPING TEST -->
+  <div class="ep-view" data-ep-view="typing">
+    <div class="ep-panel">
+      <h3>⌨️ اختبار سرعة الكتابة</h3>
+      <p>اكتب النص الظاهر بالأسفل بأكبر دقة ممكنة. الاختبار مدته 30 ثانية.</p>
+      <div class="ep-type-text" id="ep-type-prompt"></div>
+      <textarea class="ep-input" id="ep-type-input" rows="3" placeholder="اضغط ابدأ ثم اكتب النص هنا..." disabled></textarea>
+      <div class="ep-big" id="ep-type-time">30</div>
+      <div id="ep-type-result" aria-live="polite">جاهز للتحدي؟</div>
+      <button class="ep-btn" id="ep-type-start">ابدأ الاختبار</button>
+    </div>
+  </div>
+
+  <!-- CALCULATOR AND CONVERTER -->
+  <div class="ep-view" data-ep-view="tools">
+    <div class="ep-grid">
+      <div class="ep-panel">
+        <h3>🧮 حاسبة بسيطة</h3>
+        <input class="ep-input" id="ep-num-a" type="number" placeholder="الرقم الأول">
+        <select class="ep-input" id="ep-operation">
+          <option value="+">جمع (+)</option>
+          <option value="-">طرح (-)</option>
+          <option value="*">ضرب (×)</option>
+          <option value="/">قسمة (÷)</option>
+        </select>
+        <input class="ep-input" id="ep-num-b" type="number" placeholder="الرقم الثاني">
+        <button class="ep-btn" id="ep-calculate">احسب</button>
+        <div class="ep-item" id="ep-calc-result" aria-live="polite">النتيجة هتظهر هنا.</div>
+      </div>
+      <div class="ep-panel">
+        <h3>📏 محوّل الوحدات</h3>
+        <input class="ep-input" id="ep-unit-value" type="number" placeholder="القيمة">
+        <select class="ep-input" id="ep-unit-kind">
+          <option value="km-mi">كيلومتر ← ميل</option>
+          <option value="mi-km">ميل ← كيلومتر</option>
+          <option value="m-cm">متر ← سنتيمتر</option>
+          <option value="cm-m">سنتيمتر ← متر</option>
+          <option value="kg-g">كيلوجرام ← جرام</option>
+          <option value="g-kg">جرام ← كيلوجرام</option>
+          <option value="c-f">مئوية ← فهرنهايت</option>
+          <option value="f-c">فهرنهايت ← مئوية</option>
+        </select>
+        <button class="ep-btn" id="ep-convert">حوّل</button>
+        <div class="ep-item" id="ep-convert-result" aria-live="polite">النتيجة هتظهر هنا.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="ep-view" data-ep-view="badges">
+    <div class="ep-panel">
+      <h3>🏆 إنجازاتك في الأدوات</h3>
+      <p class="ep-muted">الشارات دي مستقلة عن إنجازات الألعاب الأصلية.</p>
+      <div id="ep-badges-list"></div>
+    </div>
+  </div>
+
+  <!-- BACKUP -->
+  <div class="ep-view" data-ep-view="backup">
+    <div class="ep-panel">
+      <h3>💾 حفظ واسترجاع بيانات الإضافات</h3>
+      <p>نزّل نسخة احتياطية من مهام المذاكرة والملاحظات وسجل المصروفات والشارات الجديدة. النسخة دي لا تستبدل بيانات الألعاب القديمة.</p>
+      <button class="ep-btn" id="ep-export">تنزيل نسخة احتياطية</button>
+      <hr>
+      <label for="ep-import-file">استرجاع نسخة احتياطية سابقة من الإضافات:</label>
+      <input class="ep-input" id="ep-import-file" type="file" accept=".json,application/json">
+      <button class="ep-btn" id="ep-import">استرجاع النسخة</button>
+      <p class="ep-muted">احتفظ بالملف في مكان آمن. لا ترفع نسخة بياناتك إلى مكان عام.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+"use strict";
+const EP_KEY="ehabProToolsAddonV1";
+const $ep=id=>document.getElementById(id);
+const epToday=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const epDefault=()=>({tasks:[],money:[],notes:[],budget:0,badges:[],typingBest:0});
+let epData;
+try{
+  const raw=localStorage.getItem(EP_KEY);
+  epData=raw?JSON.parse(raw):epDefault();
+}catch(e){epData=epDefault()}
+if(!epData||typeof epData!=="object"||Array.isArray(epData))epData=epDefault();
+["tasks","money","notes","badges"].forEach(k=>{if(!Array.isArray(epData[k]))epData[k]=[]});
+if(!Number.isFinite(epData.budget)||epData.budget<0)epData.budget=0;
+if(!Number.isFinite(epData.typingBest)||epData.typingBest<0)epData.typingBest=0;
+let epTypeInterval=null,epTypeEnd=0,epTypeRunning=false,epTypeStartedAt=0;
+const epSay=msg=>alert(msg);
+function epSave(){try{localStorage.setItem(EP_KEY,JSON.stringify(epData))}catch(e){epSay("المتصفح لم يستطع الحفظ. جرّب مساحة تخزين متاحة أكثر.")}}
+function epEscape(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function epBadge(id,title){
+ if(!epData.badges.includes(id)){epData.badges.push(id);epSave()}
+}
+function epRenderStats(){
+ $ep("ep-study-stat").textContent=epData.tasks.filter(t=>t.done).length;
+ $ep("ep-notes-stat").textContent=epData.notes.length;
+ const income=epData.money.filter(m=>m.kind==="income").reduce((s,m)=>s+m.amount,0);
+ const expense=epData.money.filter(m=>m.kind==="expense").reduce((s,m)=>s+m.amount,0);
+ $ep("ep-money-stat").textContent=(expense-income).toFixed(2);
+ $ep("ep-badges-stat").textContent=epData.badges.length;
+}
+function epRenderStudy(){
+ const box=$ep("ep-study-list");box.replaceChildren();
+ if(!epData.tasks.length){box.textContent="لسه مفيش مهام. أضف أول مهمة فوق.";return}
+ epData.tasks.forEach((t,i)=>{
+  const row=document.createElement("div");row.className="ep-item";
+  const text=document.createElement("div");
+  text.textContent=(t.done?"✅ ":"📌 ")+t.subject+" — "+t.title+(t.date?" | "+t.date:"");
+  if(t.done)text.style.textDecoration="line-through";
+  const done=document.createElement("button");done.className="ep-btn";done.textContent=t.done?"تمت":"تم الإنجاز";done.disabled=t.done;
+  done.onclick=()=>{t.done=true;epBadge("study","منظم المذاكرة");epSave();epRenderAll()};
+  const del=document.createElement("button");del.className="ep-btn alt";del.textContent="حذف";del.onclick=()=>{if(confirm("تحذف المهمة دي؟")){epData.tasks.splice(i,1);epSave();epRenderAll()}};
+  row.append(text,done,del);box.append(row);
+ });
+}
+$ep("ep-add-task").onclick=()=>{
+ const subject=$ep("ep-subject").value.trim(),title=$ep("ep-task").value.trim(),date=$ep("ep-task-date").value;
+ if(!subject||!title){epSay("اكتب اسم المادة والمهمة الأول.");return}
+ epData.tasks.unshift({subject:subject.slice(0,80),title:title.slice(0,180),date,done:false,created:Date.now()});
+ $ep("ep-subject").value="";$ep("ep-task").value="";
+ epSave();epRenderAll();
+};
+function epRenderMoney(){
+ const income=epData.money.filter(m=>m.kind==="income").reduce((s,m)=>s+m.amount,0);
+ const expense=epData.money.filter(m=>m.kind==="expense").reduce((s,m)=>s+m.amount,0);
+ const balance=income-expense;
+ $ep("ep-income").textContent=income.toFixed(2);
+ $ep("ep-expenses").textContent=expense.toFixed(2);
+ $ep("ep-balance").textContent=balance.toFixed(2);
+ $ep("ep-budget").value=epData.budget||"";
+ const pct=epData.budget>0?Math.max(0,Math.min(100,balance/epData.budget*100)):0;
+ $ep("ep-budget-bar").style.width=pct+"%";
+ $ep("ep-budget-text").textContent=epData.budget>0?"هدفك "+epData.budget+" جنيه — التقدم "+pct.toFixed(0)+"%":"حدد هدف توفير علشان تتابع تقدمك.";
+ const box=$ep("ep-money-list");box.replaceChildren();
+ if(!epData.money.length){box.textContent="سجل عملياتك علشان تظهر هنا.";return}
+ epData.money.slice(0,50).forEach((m,i)=>{
+  const row=document.createElement("div");row.className="ep-item";
+  row.textContent=(m.kind==="income"?"➕ دخل":"➖ مصروف")+" — "+m.note+" — "+m.amount.toFixed(2)+" جنيه";
+  const del=document.createElement("button");del.className="ep-btn alt";del.textContent="حذف";del.onclick=()=>{if(confirm("تحذف العملية دي؟")){epData.money.splice(i,1);epSave();epRenderAll()}};
+  row.append(del);box.append(row);
+ });
+}
+$ep("ep-save-budget").onclick=()=>{
+ const n=Number($ep("ep-budget").value);
+ if(!Number.isFinite(n)||n<0){epSay("اكتب هدف توفير صحيح.");return}
+ epData.budget=n;epSave();epRenderAll();
+};
+$ep("ep-add-money").onclick=()=>{
+ const amount=Number($ep("ep-money-amount").value),note=$ep("ep-money-note").value.trim()||"عملية بدون وصف";
+ if(!Number.isFinite(amount)||amount<=0){epSay("اكتب مبلغًا أكبر من صفر.");return}
+ epData.money.unshift({kind:$ep("ep-money-kind").value,amount,note:note.slice(0,80),date:epToday()});
+ $ep("ep-money-amount").value="";$ep("ep-money-note").value="";
+ epBadge("money","متابع المصروفات");epSave();epRenderAll();
+};
+$ep("ep-clear-money").onclick=()=>{
+ if(confirm("متأكد إنك عايز تمسح سجل المصروفات؟ ده مش هيمسح ألعاب الموقع.")){epData.money=[];epSave();epRenderAll()}
+};
+function epRenderNotes(){
+ const box=$ep("ep-notes-list");box.replaceChildren();
+ if(!epData.notes.length){box.textContent="مفيش ملاحظات محفوظة لسه.";return}
+ epData.notes.forEach((n,i)=>{
+  const row=document.createElement("div");row.className="ep-item";
+  const title=document.createElement("strong");title.textContent=n.title;
+  const body=document.createElement("p");body.textContent=n.body;body.style.whiteSpace="pre-wrap";
+  const edit=document.createElement("button");edit.className="ep-btn";edit.textContent="تعديل";edit.onclick=()=>{
+   $ep("ep-note-title").value=n.title;$ep("ep-note-body").value=n.body;
+   epData.notes.splice(i,1);epSave();epRenderAll();$ep("ep-note-title").focus();
+  };
+  const del=document.createElement("button");del.className="ep-btn alt";del.textContent="حذف";del.onclick=()=>{if(confirm("تحذف الملاحظة؟")){epData.notes.splice(i,1);epSave();epRenderAll()}};
+  row.append(title,body,edit,del);box.append(row);
+ });
+}
+$ep("ep-save-note").onclick=()=>{
+ const title=$ep("ep-note-title").value.trim(),body=$ep("ep-note-body").value.trim();
+ if(!title||!body){epSay("اكتب عنوان الملاحظة ومحتواها.");return}
+ epData.notes.unshift({title:title.slice(0,80),body:body.slice(0,5000),date:epToday()});
+ $ep("ep-note-title").value="";$ep("ep-note-body").value="";
+ epBadge("notes","حافظ الملاحظات");epSave();epRenderAll();
+};
+const epPrompts=[
+ "ابدأ يومك بخطوة صغيرة، واستمر في التعلم كل يوم.",
+ "التدريب المنتظم يساعدك على تطوير مهاراتك.",
+ "نظم وقتك، وحدد هدفًا واضحًا قبل البدء.",
+ "التقدم البسيط كل يوم يصنع فرقًا مع الوقت."
+];
+let epPrompt=epPrompts[Math.floor(Math.random()*epPrompts.length)];
+$ep("ep-type-prompt").textContent=epPrompt;
+$ep("ep-type-start").onclick=()=>{
+ clearInterval(epTypeInterval);epTypeRunning=true;epTypeEnd=Date.now()+30000;epTypeStartedAt=Date.now();
+ $ep("ep-type-input").disabled=false;$ep("ep-type-input").value="";$ep("ep-type-input").focus();
+ $ep("ep-type-result").textContent="ابدأ الكتابة الآن!";
+ $ep("ep-type-start").disabled=true;
+ $ep("ep-type-time").textContent="30";
+ epTypeInterval=setInterval(()=>{
+  const left=Math.max(0,Math.ceil((epTypeEnd-Date.now())/1000));
+  $ep("ep-type-time").textContent=left;
+  if(left<=0)epFinishTyping();
+ },200);
+};
+function epFinishTyping(){
+ if(!epTypeRunning)return;
+ epTypeRunning=false;clearInterval(epTypeInterval);
+ $ep("ep-type-input").disabled=true;$ep("ep-type-start").disabled=false;
+ const typed=$ep("ep-type-input").value;
+ const words=typed.trim()?typed.trim().split(/\s+/).length:0;
+ const elapsed=Math.max(1,(Date.now()-epTypeStartedAt)/60000);
+ const wpm=Math.round(words/elapsed);
+ const expected=epPrompt.slice(0,typed.length);
+ let correct=0;for(let i=0;i<typed.length;i++)if(typed[i]===expected[i])correct++;
+ const accuracy=typed.length?Math.round(correct/typed.length*100):0;
+ $ep("ep-type-result").textContent="سرعتك: "+wpm+" كلمة/دقيقة — الدقة التقريبية: "+accuracy+"%";
+ if(wpm>epData.typingBest){epData.typingBest=wpm;epBadge("typing","سريع الكتابة")}
+ epSave();epRenderAll();
+}
+$ep("ep-type-input").addEventListener("input",()=>{
+ if(epTypeRunning&&$ep("ep-type-input").value.length>=epPrompt.length)epFinishTyping();
+});
+$ep("ep-calculate").onclick=()=>{
+ const a=Number($ep("ep-num-a").value),b=Number($ep("ep-num-b").value),op=$ep("ep-operation").value;
+ if($ep("ep-num-a").value===""||$ep("ep-num-b").value===""){ $ep("ep-calc-result").textContent="اكتب الرقمين الأول.";return}
+ if(op==="/"&&b===0){$ep("ep-calc-result").textContent="مينفعش القسمة على صفر.";return}
+ const result=op==="+"?a+b:op==="-"?a-b:op==="*"?a*b:a/b;
+ $ep("ep-calc-result").textContent="النتيجة: "+(Number.isFinite(result)?Number(result.toFixed(8)):"غير صالحة");
+ epBadge("calculator","استخدم الحاسبة");epSave();epRenderAll();
+};
+$ep("ep-convert").onclick=()=>{
+ const raw=$ep("ep-unit-value").value;
+ if(raw===""){ $ep("ep-convert-result").textContent="اكتب القيمة الأول.";return}
+ const n=Number(raw),kind=$ep("ep-unit-kind").value;
+ const map={
+  "km-mi":[n=>n*0.621371,"ميل"],"mi-km":[n=>n/0.621371,"كم"],
+  "m-cm":[n=>n*100,"سم"],"cm-m":[n=>n/100,"متر"],
+  "kg-g":[n=>n*1000,"جرام"],"g-kg":[n=>n/1000,"كجم"],
+  "c-f":[n=>n*9/5+32,"°F"],"f-c":[n=>(n-32)*5/9,"°C"]
+ };
+ const result=map[kind][0](n);
+ $ep("ep-convert-result").textContent="النتيجة: "+Number(result.toFixed(6))+" "+map[kind][1];
+ epBadge("converter","حوّل الوحدات");epSave();epRenderAll();
+};
+function epRenderBadges(){
+ const box=$ep("ep-badges-list");box.replaceChildren();
+ const all=[
+  ["study","📚 منظم المذاكرة"],["money","💰 متابع المصروفات"],
+  ["notes","📝 حافظ الملاحظات"],["typing","⌨️ سريع الكتابة"],
+  ["calculator","🧮 مستخدم الحاسبة"],["converter","📏 محوّل الوحدات"]
+ ];
+ all.forEach(([id,title])=>{
+  const row=document.createElement("div");row.className="ep-item";
+  row.textContent=(epData.badges.includes(id)?"🏆 ":"🔒 ")+title;
+  box.append(row);
+ });
+ if(epData.typingBest)$ep("ep-type-result").textContent+=" | أفضل سرعة محفوظة: "+epData.typingBest;
+}
+function epRenderAll(){epRenderStudy();epRenderMoney();epRenderNotes();epRenderBadges();epRenderStats()}
+document.querySelectorAll("#ep-tools [data-ep-tab]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  document.querySelectorAll("#ep-tools [data-ep-tab]").forEach(b=>b.classList.toggle("active",b===btn));
+  document.querySelectorAll("#ep-tools [data-ep-view]").forEach(v=>v.classList.toggle("active",v.dataset.epView===btn.dataset.epTab));
+ });
+});
+$ep("ep-export").onclick=()=>{
+ const blob=new Blob([JSON.stringify(epData,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="ehab-pro-tools-backup.json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+$ep("ep-import").onclick=()=>{
+ const file=$ep("ep-import-file").files[0];if(!file){epSay("اختار ملف النسخة الاحتياطية الأول.");return}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const incoming=JSON.parse(reader.result);
+   if(!incoming||!Array.isArray(incoming.tasks)||!Array.isArray(incoming.money)||!Array.isArray(incoming.notes)||!Array.isArray(incoming.badges))throw Error("invalid");
+   if(!confirm("استرجاع النسخة هيستبدل بيانات الإضافات الجديدة الحالية فقط. هل تكمل؟"))return;
+   epData={...epDefault(),...incoming};
+   epSave();epRenderAll();epSay("تم استرجاع بيانات الإضافات. بيانات الألعاب القديمة لم تتغير.");
+  }catch(e){epSay("الملف مش نسخة احتياطية صحيحة من Ehab Pro Tools.")}
+ };
+ reader.readAsText(file);
+};
+epRenderAll();
+})();
+</script>
+<!-- End Ehab Pro Useful Tools Add-on -->
+
 </body>
 </html>
