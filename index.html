@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071329">
+<meta name="description" content="Ehab Pro - ألعاب وتحديات ومهام وأدوات تفاعلية مجانية">
+<title>Ehab Pro | عالمك يبدأ هنا</title>
+<style>
+:root {
+  --bg:#071329; --panel:#101f3d; --panel2:#142849;
+  --blue:#168bff; --cyan:#00d5ff; --text:#f4f8ff;
+  --muted:#aabbd7; --gold:#ffc83d; --border:#263e65;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:radial-gradient(ellipse at top,#112b54,var(--bg) 65%);
+  color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.7;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+header{
+  position:sticky;top:0;z-index:10;background:#071329ed;
+  border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
+  padding:12px 5%;
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:var(--cyan);direction:ltr}
+.logo span{color:var(--gold)}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+nav a{color:var(--text);text-decoration:none;padding:7px 10px;border-radius:10px}
+nav a:hover{background:var(--panel2);color:var(--cyan)}
+.container{width:min(1100px,92%);margin:auto}
+.hero{
+  padding:65px 20px 45px;text-align:center;
+  background:linear-gradient(135deg,#102b55aa,#07132955);
+  border-bottom:1px solid var(--border);
+}
+.crown{font-size:55px}
+h1{font-size:clamp(36px,7vw,65px);margin:0;direction:ltr}
+h1 span{color:var(--cyan)}
+.hero p{color:var(--muted);max-width:600px;margin:12px auto 22px}
+.btn{
+  border:0;border-radius:12px;padding:11px 19px;
+  background:linear-gradient(100deg,var(--blue),var(--cyan));
+  color:white;font-weight:bold;transition:.2s;
+}
+.btn:hover{filter:brightness(1.13);transform:translateY(-2px)}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border)}
+.btn.gold{background:linear-gradient(100deg,#e69a00,#ffda53);color:#18213a}
+section{padding:27px 0;scroll-margin-top:95px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.section-title h2{font-size:23px;margin:0 0 15px}
+.stats,.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.stat,.card,.panel{
+  background:linear-gradient(145deg,var(--panel),#0a1830);
+  border:1px solid var(--border);border-radius:17px;padding:17px;
+}
+.stat{text-align:center}
+.stat .icon{font-size:27px}
+.stat strong{display:block;font-size:25px;color:var(--cyan)}
+.stat small{color:var(--muted)}
+.grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.card .emoji{font-size:39px}
+.card h3{margin:0;font-size:19px}
+.card p{color:var(--muted);margin:0 0 7px;font-size:14px;flex:1}
+.card .btn{width:100%}
+.progress{height:10px;background:#263955;border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .3s}
+.task{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.task:last-child{border:0}
+.task p{margin:0}
+.task small{color:var(--muted)}
+.task.done p{text-decoration:line-through;color:var(--muted)}
+.tag{color:var(--gold);font-weight:bold;white-space:nowrap}
+.game-box{background:#08152b;border:1px dashed #35659c;border-radius:14px;padding:18px;margin-top:12px}
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:15px}
+.memory-card{min-height:65px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;color:white;font-size:27px}
+.memory-card:disabled{opacity:1;background:#12533f;border-color:#20b87b}
+#reactionArea{width:100%;min-height:100px;border:0;border-radius:12px;background:#253b5b;color:white;font-weight:bold;font-size:19px;margin-top:12px}
+#reactionArea.ready{background:#0c9b65}
+#reactionArea.wait{background:#b74b39}
+.shop-item{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+input{background:#071329;color:white;border:1px solid var(--border);border-radius:10px;padding:10px;width:100%;margin:7px 0}
+footer{text-align:center;padding:30px 10px;color:var(--muted);border-top:1px solid var(--border);margin-top:25px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12365a;border:1px solid var(--cyan);padding:12px 20px;border-radius:12px;z-index:30;display:none;max-width:90%;text-align:center}
+body.theme-purple{--bg:#170c2c;--panel:#291849;--panel2:#38245a;--border:#60448a;--blue:#a855f7;--cyan:#e0aaff}
+body.theme-green{--bg:#061e1b;--panel:#10352d;--panel2:#19473a;--border:#276653;--blue:#00a878;--cyan:#57f2b0}
+@media(max-width:750px){
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ header{padding:10px 4%}nav{width:100%;justify-content:center}
+ nav a{font-size:13px;padding:6px}
+ .hero{padding-top:40px}
+}
+@media(max-width:430px){
+ .grid{grid-template-columns:1fr}
+ .card{padding:15px}
+ .section-title h2{font-size:20px}
+ .task{align-items:flex-start}
+ .memory-card{min-height:57px}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="nav">
+  <div class="logo"><span>👑</span> Ehab Pro</div>
+  <nav>
+   <a href="#home">الرئيسية</a>
+   <a href="#games">الألعاب</a>
+   <a href="#tasks">المهام</a>
+   <a href="#shop">المتجر</a>
+   <a href="#tools">الأدوات</a>
+  </nav>
+ </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+ <div class="crown">👑</div>
+ <h1>Ehab <span>Pro</span></h1>
+ <h2>عالمك. تحدياتك. إنجازاتك.</h2>
+ <p>العب ألعابًا سريعة، أكمل تحدياتك، واجمع النقاط وافتح ألوانًا جديدة لموقعك. كل شيء في مكان واحد!</p>
+ <button class="btn" onclick="document.querySelector('#games').scrollIntoView()">🚀 ابدأ المغامرة</button>
+ <button class="btn secondary" onclick="dailyReward()">🎁 جائزة اليوم</button>
+</section>
+
+<div class="container">
+<section id="stats">
+ <div class="stats">
+  <div class="stat"><div class="icon">⭐</div><strong id="points">0</strong><small>نقاطك</small></div>
+  <div class="stat"><div class="icon">🏆</div><strong id="level">1</strong><small>مستواك</small></div>
+  <div class="stat"><div class="icon">✅</div><strong id="doneCount">0</strong><small>مهام مكتملة</small></div>
+  <div class="stat"><div class="icon">🎮</div><strong id="gameCount">0</strong><small>مرات اللعب</small></div>
+ </div>
+ <div class="panel" style="margin-top:14px">
+  <div class="section-title"><strong>التقدم للمستوى التالي</strong><span id="progressText">0 / 100</span></div>
+  <div class="progress"><div id="progressBar"></div></div>
+ </div>
+</section>
+
+<section id="games">
+ <div class="section-title"><h2>🎮 الألعاب والتحديات</h2></div>
+ <div class="grid">
+  <article class="card">
+   <div class="emoji">🧠</div><h3>لعبة الذاكرة</h3>
+   <p>اكشف البطاقات وابحث عن الأزواج المتطابقة.</p>
+   <button class="btn" onclick="startMemory()">العب الآن</button>
+  </article>
+  <article class="card">
+   <div class="emoji">⚡</div><h3>تحدي سرعة التفاعل</h3>
+   <p>اضغط على الزر بمجرد أن يتحول إلى الأخضر.</p>
+   <button class="btn" onclick="startReaction()">ابدأ التحدي</button>
+  </article>
+  <article class="card">
+   <div class="emoji">🔢</div><h3>تحدي الأرقام</h3>
+   <p>اضغط الأرقام من 1 إلى 10 بالترتيب بأسرع ما يمكن.</p>
+   <button class="btn" onclick="startNumbers()">ابدأ اللعب</button>
+  </article>
+ </div>
+
+ <div class="game-box" id="gameBox">
+  <strong>🎯 مساحة اللعب</strong>
+  <p>اختار لعبة من فوق، وهتظهر هنا. كل لعبة لها تحديها الخاص!</p>
+ </div>
+</section>
+
+<section id="tasks">
+ <div class="section-title"><h2>📋 مهامك اليومية</h2><span class="tag">المكافآت بالنقاط</span></div>
+ <div class="panel" id="taskList"></div>
+ <p style="color:var(--muted);font-size:13px">المهام تتجدد كل يوم حسب تاريخ جهازك. النقاط محفوظة على هذا المتصفح.</p>
+</section>
+
+<section id="shop">
+ <div class="section-title"><h2>🛍️ متجر الثيمات</h2><span>رصيدك: <b id="shopPoints">0</b> ⭐</span></div>
+ <div class="grid">
+  <article class="card">
+   <div class="emoji">🔵</div><h3>الثيم الأزرق</h3>
+   <p>المظهر الأساسي للموقع.</p><button class="btn secondary" onclick="applyTheme('blue',0)">استخدم</button>
+  </article>
+  <article class="card">
+   <div class="emoji">🟣</div><h3>الثيم البنفسجي</h3>
+   <p>افتح مظهرًا بنفسجيًا مميزًا.</p><div class="shop-item"><span class="tag">100 ⭐</span><button class="btn" onclick="buyTheme('purple',100)">افتح</button></div>
+  </article>
+  <article class="card">
+   <div class="emoji">🟢</div><h3>الثيم الأخضر</h3>
+   <p>ألوان هادئة بتصميم مختلف.</p><div class="shop-item"><span class="tag">150 ⭐</span><button class="btn" onclick="buyTheme('green',150)">افتح</button></div>
+  </article>
+ </div>
+</section>
+
+<section id="tools">
+ <div class="section-title"><h2>🧰 أدوات مفيدة</h2></div>
+ <div class="grid">
+  <article class="card">
+   <div class="emoji">⏱️</div><h3>مؤقت التركيز</h3>
+   <p>خصص وقتًا للمذاكرة أو إنجاز مهمة.</p>
+   <input id="minutes" type="number" min="1" max="180" value="25" aria-label="عدد دقائق المؤقت">
+   <button class="btn" onclick="startTimer()">ابدأ المؤقت</button>
+   <strong id="timerDisplay">25:00</strong>
+   <button class="btn secondary" onclick="stopTimer()">إيقاف المؤقت</button>
+  </article>
+  <article class="card">
+   <div class="emoji">🎲</div><h3>اختيار عشوائي</h3>
+   <p>اكتب اختياراتك وافصل بينها بفاصلة، ودع الموقع يختار واحدًا.</p>
+   <input id="choices" placeholder="مثال: رياضيات، علوم، عربي" aria-label="الاختيارات">
+   <button class="btn" onclick="pickChoice()">اختار لي!</button>
+   <strong id="choiceResult"></strong>
+  </article>
+  <article class="card">
+   <div class="emoji">💡</div><h3>فكرة اليوم</h3>
+   <p id="ideaText">النجاح نتيجة خطوات صغيرة تستمر عليها كل يوم.</p>
+   <button class="btn secondary" onclick="newIdea()">فكرة أخرى</button>
+  </article>
+ </div>
+</section>
+
+<section id="about">
+ <div class="panel" style="text-align:center">
+  <div style="font-size:35px">👑</div>
+  <h2 style="margin:0">عن Ehab Pro</h2>
+  <p style="color:var(--muted)">مشروع تفاعلي تجريبي يجمع الألعاب والتحديات والأدوات في تجربة واحدة.</p>
+  <p>Dream • Play • Learn • Grow</p>
+ </div>
+</section>
+</div>
+</main>
+
+<footer>
+ <div class="logo">👑 Ehab Pro</div>
+ <p>صُنع بشغف 💙 — النسخة الأولى</p>
+ <small>تقدمك محفوظ على جهازك. مسح بيانات المتصفح قد يحذف تقدمك.</small>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const KEY = "ehabProSaveV1";
+const today = () => new Date().toLocaleDateString("en-CA");
+const defaultState = () => ({
+ points:0, games:0, done:[], day:today(), dailyRewardDay:"",
+ theme:"blue", owned:["blue"], bestReaction:null
+});
+let state;
+try {
+ state = {...defaultState(), ...JSON.parse(localStorage.getItem(KEY) || "{}")};
+} catch(e) { state = defaultState(); }
+
+if (!Array.isArray(state.done)) state.done = [];
+if (!Array.isArray(state.owned)) state.owned = ["blue"];
+if (state.day !== today()) { state.day=today(); state.done=[]; }
+
+let toastTimer, reactionTimer, reactionStart, reactionMode="idle";
+let numberStart, nextNumber, timerInterval, timerEnd, memoryFirst=null;
+let memoryLock=false, memoryMatched=0;
+
+function save(){
+ try { localStorage.setItem(KEY,JSON.stringify(state)); }
+ catch(e){ notify("تعذر الحفظ على هذا المتصفح."); }
+}
+function notify(message){
+ const el=document.getElementById("toast");
+ el.textContent=message;el.style.display="block";
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.style.display="none",2600);
+}
+function level(){return Math.floor(state.points/100)+1}
+function render(){
+ document.getElementById("points").textContent=state.points;
+ document.getElementById("level").textContent=level();
+ document.getElementById("doneCount").textContent=state.done.length;
+ document.getElementById("gameCount").textContent=state.games;
+ document.getElementById("shopPoints").textContent=state.points;
+ const into=state.points%100;
+ document.getElementById("progressText").textContent=into+" / 100";
+ document.getElementById("progressBar").style.width=into+"%";
+ document.body.classList.remove("theme-purple","theme-green");
+ if(state.theme==="purple")document.body.classList.add("theme-purple");
+ if(state.theme==="green")document.body.classList.add("theme-green");
+ renderTasks();save();
+}
+function addPoints(n,message){
+ const old=level();state.points+=n;
+ if(level()>old)notify("🎉 مبروك! وصلت للمستوى "+level());
+ else notify(message||"⭐ حصلت على "+n+" نقطة!");
+ render();
+}
+const tasks=[
+ {id:"game",title:"العب أي لعبة",desc:"جرب واحدة من الألعاب",reward:20},
+ {id:"focus",title:"جلسة تركيز",desc:"استخدم مؤقت التركيز",reward:15},
+ {id:"ideas",title:"فكر بطريقة جديدة",desc:"افتح فكرة اليوم",reward:10}
+];
+function renderTasks(){
+ const box=document.getElementById("taskList");
+ box.innerHTML="";
+ tasks.forEach(t=>{
+  const done=state.done.includes(t.id);
+  const row=document.createElement("div");
+  row.className="task"+(done?" done":"");
+  const info=document.createElement("div");
+  const title=document.createElement("p");title.textContent=(done?"✅ ":"")+t.title;
+  const desc=document.createElement("small");desc.textContent=t.desc;
+  info.append(title,desc);
+  const button=document.createElement("button");
+  button.className="btn"+(done?" secondary":"");
+  button.textContent=done?"تمت":"استلام "+t.reward+" ⭐";
+  button.disabled=done;
+  button.onclick=()=>completeTask(t.id);
+  row.append(info,button);box.append(row);
+ });
+}
+function completeTask(id){
+ const task=tasks.find(t=>t.id===id);
+ if(!task||state.done.includes(id))return;
+ state.done.push(id);state.points+=task.reward;
+ notify("🎉 أكملت المهمة وربحت "+task.reward+" نقطة!");
+ render();
+}
+function markTask(id){
+ if(!state.done.includes(id))completeTask(id);
+}
+function dailyReward(){
+ if(state.dailyRewardDay===today()){
+  notify("🎁 استلمت جائزة اليوم بالفعل. ارجع بكرة!");
+  return;
+ }
+ state.dailyRewardDay=today();
+ state.points+=25;
+ notify("🎁 حصلت على 25 نقطة كجائزة يومية!");
+ render();
+}
+function applyTheme(theme,cost){
+ if(!state.owned.includes(theme)){
+  notify("افتح الثيم من المتجر أولًا.");return;
+ }
+ state.theme=theme;render();notify("تم تغيير المظهر!");
+}
+function buyTheme(theme,cost){
+ if(state.owned.includes(theme)){
+  applyTheme(theme,0);return;
+ }
+ if(state.points<cost){notify("نقاطك مش كفاية لسه. العب واجمع نقاط!");return;}
+ state.points-=cost;state.owned.push(theme);state.theme=theme;
+ render();notify("🛍️ تم فتح الثيم بنجاح!");
+}
+function gamePlayed(){
+ state.games++;render();markTask("game");
+}
+
+function gameArea(title){
+ const box=document.getElementById("gameBox");
+ box.innerHTML="";
+ const h=document.createElement("h3");h.textContent=title;box.append(h);
+ return box;
+}
+function startMemory(){
+ clearTimeout(reactionTimer);reactionMode="idle";
+ const box=gameArea("🧠 لعبة الذاكرة");
+ const info=document.createElement("p");
+ info.textContent="اكشف كل زوج متطابق. كل زوج صحيح يساعدك على الفوز!";
+ box.append(info);
+ const grid=document.createElement("div");grid.className="memory-grid";box.append(grid);
+ const symbols=["🍎","🚀","🎮","⭐","🐱","⚽","🍎","🚀","🎮","⭐","🐱","⚽"];
+ for(let i=symbols.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));[symbols[i],symbols[j]]=[symbols[j],symbols[i]];
+ }
+ memoryFirst=null;memoryLock=false;memoryMatched=0;
+ symbols.forEach((symbol,index)=>{
+  const b=document.createElement("button");b.className="memory-card";
+  b.textContent="❔";b.dataset.symbol=symbol;b.dataset.index=index;
+  b.setAttribute("aria-label","بطاقة مخفية");
+  b.onclick=()=>{
+   if(memoryLock||b.disabled||b===memoryFirst)return;
+   b.textContent=b.dataset.symbol;b.setAttribute("aria-label",symbol);
+   if(!memoryFirst){memoryFirst=b;return;}
+   if(memoryFirst.dataset.symbol===b.dataset.symbol){
+    memoryFirst.disabled=true;b.disabled=true;memoryMatched+=2;memoryFirst=null;
+    if(memoryMatched===symbols.length){
+     gamePlayed();addPoints(30,"🏆 فزت وربحت 30 نقطة!");
+     const msg=document.createElement("p");msg.textContent="🏆 رائع! أنهيت اللعبة!";
+     box.append(msg);
+    }
+   }else{
+    const first=memoryFirst;memoryFirst=null;memoryLock=true;
+    setTimeout(()=>{first.textContent="❔";b.textContent="❔";first.setAttribute("aria-label","بطاقة مخفية");b.setAttribute("aria-label","بطاقة مخفية");memoryLock=false;},750);
+   }
+  };
+  grid.append(b);
+ });
+}
+function startReaction(){
+ clearTimeout(reactionTimer);reactionMode="idle";
+ const box=gameArea("⚡ تحدي سرعة التفاعل");
+ const info=document.createElement("p");
+ info.textContent="اضغط ابدأ، واستنى اللون الأخضر. متضغطش بدري!";
+ const b=document.createElement("button");b.id="reactionArea";b.textContent="ابدأ التحدي";
+ box.append(info,b);
+ b.onclick=()=>{
+  if(reactionMode==="idle"||reactionMode==="result"){
+   reactionMode="waiting";b.className="wait";b.textContent="استنى اللون الأخضر...";
+   reactionTimer=setTimeout(()=>{
+    reactionMode="ready";reactionStart=performance.now();
+    b.className="ready";b.textContent="اضغط الآن! 🟢";
+   },1200+Math.random()*2500);
+  }else if(reactionMode==="waiting"){
+   clearTimeout(reactionTimer);reactionMode="result";
+   b.className="";b.textContent="بدري جدًا! حاول تاني";
+  }else if(reactionMode==="ready"){
+   const ms=Math.round(performance.now()-reactionStart);
+   reactionMode="result";b.className="";b.textContent=ms+" مللي ثانية — العب تاني";
+   state.bestReaction=state.bestReaction===null?ms:Math.min(ms,state.bestReaction);
+   gamePlayed();addPoints(15,"⚡ ربحت 15 نقطة!");
+   const result=document.createElement("p");
+   result.textContent="أفضل زمن لك: "+state.bestReaction+" مللي ثانية";
+   box.append(result);
+  }
+ };
+}
+function startNumbers(){
+ const box=gameArea("🔢 تحدي الأرقام");
+ const info=document.createElement("p");
+ info.textContent="اضغط الأرقام من 1 إلى 10 بالترتيب.";
+ const status=document.createElement("strong");status.textContent="ابدأ بالرقم 1";
+ const grid=document.createElement("div");grid.className="memory-grid";
+ grid.style.gridTemplateColumns="repeat(5,1fr)";
+ let nums=Array.from({length:10},(_,i)=>i+1);
+ for(let i=nums.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[nums[i],nums[j]]=[nums[j],nums[i]]}
+ nextNumber=1;numberStart=performance.now();
+ box.append(info,status,grid);
+ nums.forEach(n=>{
+  const b=document.createElement("button");b.className="memory-card";b.textContent=n;
+  b.onclick=()=>{
+   if(n!==nextNumber){status.textContent="❌ جرّب الرقم "+nextNumber;return}
+   b.disabled=true;b.textContent="✅";nextNumber++;
+   if(nextNumber>10){
+    const seconds=((performance.now()-numberStart)/1000).toFixed(1);
+    status.textContent="🏆 خلصت في "+seconds+" ثانية!";
+    gamePlayed();addPoints(25,"🎉 ربحت 25 نقطة!");
+   }else status.textContent="الرقم التالي: "+nextNumber;
+  };grid.append(b);
+ });
+}
+let timerRemaining=1500;
+function startTimer(){
+ stopTimer();
+ const minutes=Math.floor(Number(document.getElementById("minutes").value));
+ if(!Number.isFinite(minutes)||minutes<1||minutes>180){
+  notify("اكتب عدد دقائق من 1 إلى 180.");return;
+ }
+ timerRemaining=minutes*60;timerEnd=Date.now()+timerRemaining*1000;
+ markTask("focus");updateTimer();
+ timerInterval=setInterval(()=>{
+  timerRemaining=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));
+  updateTimer();
+  if(timerRemaining<=0){
+   stopTimer();notify("⏰ انتهت جلسة التركيز! أحسنت.");
+   addPoints(10,"🎉 مكافأة التركيز: 10 نقاط!");
+  }
+ },250);
+}
+function updateTimer(){
+ const m=Math.floor(timerRemaining/60),s=timerRemaining%60;
+ document.getElementById("timerDisplay").textContent=
+  String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+function stopTimer(){
+ if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+}
+const ideas=[
+ "ابدأ بأصغر خطوة، واستمر عليها يومًا بعد يوم.",
+ "جرّب تتعلم مهارة جديدة لمدة عشر دقائق اليوم.",
+ "قسّم المهمة الكبيرة إلى ثلاث خطوات بسيطة.",
+ "راجع ما تعلمته اليوم قبل ما تبدأ حاجة جديدة.",
+ "خذ استراحة قصيرة بين جلسات التركيز."
+];
+function newIdea(){
+ document.getElementById("ideaText").textContent=ideas[Math.floor(Math.random()*ideas.length)];
+ markTask("ideas");
+}
+function pickChoice(){
+ const input=document.getElementById("choices").value;
+ const items=input.split(/[،,]/).map(s=>s.trim()).filter(Boolean);
+ document.getElementById("choiceResult").textContent=
+  items.length? "🎯 اختيارنا: "+items[Math.floor(Math.random()*items.length)]:"اكتب اختيارين أو أكثر أولًا.";
+}
+render();
+</script>
+</body>
+</html>
