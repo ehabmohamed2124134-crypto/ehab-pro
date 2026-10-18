@@ -488,5 +488,168 @@ render();drawWheel();
   <span>تواصل واتساب</span>
 </a>
 
+<!-- Ehab Pro: VIP + Smart Assistant -->
+<style>
+#ehab-extra{margin:20px auto;max-width:1000px;width:94%}
+.ep-panel{background:#10203d;border:1px solid #294267;border-radius:16px;padding:16px;margin:14px 0;color:#f4f8ff}
+.ep-panel h2{color:#00d5ff;margin-top:0}
+.ep-row{display:flex;gap:8px;flex-wrap:wrap}
+.ep-row>*{flex:1;min-width:120px}
+.ep-btn{border:0;border-radius:10px;padding:11px;background:#168bff;color:white;font-weight:bold}
+.ep-btn:disabled{opacity:.5}
+.ep-muted{color:#a9bad6;font-size:13px}
+.ep-chat{height:220px;overflow:auto;background:#071329;border-radius:10px;padding:10px;margin:10px 0}
+.ep-msg{padding:9px 11px;margin:7px 0;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ep-user{background:#174c7d}
+.ep-bot{background:#263955}
+#ehab-extra input,#ehab-extra textarea{width:100%;padding:11px;border-radius:10px;background:#071329;color:white;border:1px solid #294267;margin:5px 0}
+</style>
+
+<div id="ehab-extra">
+  <section class="ep-panel" id="ep-vip">
+    <h2>👑 عضوية Ehab VIP</h2>
+    <p>اجمع النقاط من الألعاب وافتح رتبك المميزة!</p>
+    <div class="ep-row">
+      <div class="ep-panel">
+        <div class="ep-muted">رتبتك</div>
+        <strong id="ep-rank">عضو جديد</strong>
+      </div>
+      <div class="ep-panel">
+        <div class="ep-muted">نقاطك</div>
+        <strong id="ep-points">0 ⭐</strong>
+      </div>
+    </div>
+    <div class="ep-muted" id="ep-next">ابدأ اللعب لترفع رتبتك.</div>
+    <div style="height:10px;background:#263955;border-radius:20px;overflow:hidden;margin:10px 0">
+      <div id="ep-progress" style="height:100%;width:0;background:linear-gradient(90deg,#168bff,#00d5ff)"></div>
+    </div>
+    <h3>🎨 مكافآت VIP</h3>
+    <div class="ep-row">
+      <button class="ep-btn" onclick="epBuy('title')">لقب VIP — 200 نقطة</button>
+      <button class="ep-btn" onclick="epBuy('glow')">مظهر مضيء — 300 نقطة</button>
+    </div>
+    <p id="ep-shop-status" class="ep-muted">المكافآت تُحفظ على هذا المتصفح.</p>
+    <h3 id="ep-vip-title">عضوية: عادي</h3>
+  </section>
+
+  <section class="ep-panel" id="ep-assistant">
+    <h2>🤖 مساعد Ehab</h2>
+    <p class="ep-muted">اسأل عن تنظيم المهام أو الكتابة أو أفكار الموقع. هذه النسخة ترد بقواعد محلية وليست نموذج AI متصلًا بالإنترنت.</p>
+    <div class="ep-chat" id="ep-chat" aria-live="polite">
+      <div class="ep-msg ep-bot">أهلًا بيك في Ehab Pro! 👋 اكتب سؤالك وسأحاول مساعدتك.</div>
+    </div>
+    <textarea id="ep-question" rows="3" placeholder="اكتب رسالتك هنا..."></textarea>
+    <div class="ep-row">
+      <button class="ep-btn" onclick="epAsk()">إرسال</button>
+      <button class="ep-btn" style="background:#263955" onclick="epClear()">مسح المحادثة</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const KEY="ehabProSaveV1";
+  function readState(){
+    try{return JSON.parse(localStorage.getItem(KEY)||"{}")}
+    catch(e){return {}}
+  }
+  function writeState(s){
+    try{localStorage.setItem(KEY,JSON.stringify(s))}
+    catch(e){}
+  }
+  function points(){return Math.max(0,Number(readState().points)||0)}
+  function vipState(){
+    const s=readState();
+    if(!s.epVip || typeof s.epVip!=="object") s.epVip={};
+    if(!Array.isArray(s.epVip.owned))s.epVip.owned=[];
+    return s;
+  }
+  function rank(p){
+    if(p>=1000)return ["VIP Diamond",1000];
+    if(p>=600)return ["VIP Gold",600];
+    if(p>=300)return ["VIP Silver",300];
+    if(p>=100)return ["VIP Bronze",100];
+    return ["عضو جديد",100];
+  }
+  window.epRender=function(){
+    const p=points(),r=rank(p);
+    const next=r[1],prev=r[1]===100?0:r[1]===300?100:r[1]===600?300:r[1]===1000?600:0;
+    const pct=Math.max(0,Math.min(100,((p-prev)/(next-prev||1))*100));
+    document.getElementById("ep-rank").textContent=r[0];
+    document.getElementById("ep-points").textContent=p+" ⭐";
+    document.getElementById("ep-next").textContent=p>=1000?"وصلت لأعلى رتبة حاليًا!":"تقدمك للرتبة التالية: "+Math.floor(pct)+"%";
+    document.getElementById("ep-progress").style.width=pct+"%";
+    const s=vipState(),owned=s.epVip.owned;
+    document.getElementById("ep-vip-title").textContent=
+      "عضوية: "+(owned.includes("title")?"👑 VIP":"عادي");
+    document.getElementById("ep-shop-status").textContent=
+      "المظهر المضيء: "+(owned.includes("glow")?"مفتوح":"مغلق")+
+      " — رصيدك "+p+" نقطة.";
+    if(owned.includes("glow")){
+      document.getElementById("ep-vip").style.boxShadow="0 0 18px #00d5ff66";
+    }
+  };
+  window.epBuy=function(item){
+    const s=vipState(),cost=item==="title"?200:300;
+    if(s.epVip.owned.includes(item)){
+      document.getElementById("ep-shop-status").textContent="المكافأة دي مفتوحة بالفعل!";
+      return;
+    }
+    if((Number(s.points)||0)<cost){
+      document.getElementById("ep-shop-status").textContent="نقاطك مش كفاية. العب واجمع نقاط!";
+      return;
+    }
+    s.points-=cost;
+    s.epVip.owned.push(item);
+    writeState(s);
+    epRender();
+    document.getElementById("ep-shop-status").textContent="🎉 تم فتح المكافأة بنجاح!";
+    if(typeof window.render==="function")window.render();
+  };
+  function addMessage(text,who){
+    const chat=document.getElementById("ep-chat");
+    const msg=document.createElement("div");
+    msg.className="ep-msg "+(who==="user"?"ep-user":"ep-bot");
+    msg.textContent=text;
+    chat.appendChild(msg);
+    chat.scrollTop=chat.scrollHeight;
+  }
+  window.epAsk=function(){
+    const field=document.getElementById("ep-question");
+    const q=field.value.trim();
+    if(!q)return;
+    addMessage(q,"user");
+    field.value="";
+    const t=q.toLowerCase();
+    let a="أقدر أساعدك ترتب فكرتك إلى خطوات صغيرة. اكتب هدفك بالتحديد عشان نبدأ.";
+    if(/اهلا|أهلا|السلام|مرحبا|هاي|hello/.test(t)){
+      a="أهلًا يا بطل! 👋 أنا مساعد Ehab Pro. تحب نرتب مهمة، نكتب فكرة، ولا نطوّر الموقع؟";
+    }else if(/مذاكر|دراس|واجب|مدرس|study/.test(t)){
+      a="للمذاكرة: 1) اختر مادة واحدة. 2) ذاكر جزءًا صغيرًا. 3) حل أسئلة عليه. 4) خذ استراحة قصيرة ثم راجع إجاباتك.";
+    }else if(/موقع|كود|برمج|website|code/.test(t)){
+      a="لتطوير الموقع بأمان: احتفظ بنسخة من index.html أولًا، أضف ميزة واحدة كل مرة، ثم اختبر الألعاب والنقاط والحفظ قبل أي تعديل جديد.";
+    }else if(/فكر|اقتراح|مشروع|افكار/.test(t)){
+      a="أفكار للموقع: مهمات أسبوعية، شارات إنجاز، ثيمات جديدة، صفحة إحصائيات، أو تحديات ذاكرة. الأفضل إضافة ميزة واحدة واختبارها قبل التالية.";
+    }else if(/نظم|رتب|وقت|مهام|خطة/.test(t)){
+      a="اكتب مهامك في قائمة، رتبها من الأهم للأقل أهمية، وحدد وقتًا مناسبًا لكل مهمة مع فواصل للراحة.";
+    }else if(/نقاط|vip|مستوى|رتب/.test(t)){
+      a="اجمع النقاط من الألعاب والمهام الموجودة بالموقع. رتب VIP هنا تُحسب حسب رصيد النقاط الحالي.";
+    }
+    addMessage(a,"bot");
+  };
+  window.epClear=function(){
+    document.getElementById("ep-chat").replaceChildren();
+    addMessage("المحادثة اتمسحت. أهلًا بيك من جديد!","bot");
+  };
+  document.getElementById("ep-question").addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();epAsk();}
+  });
+  epRender();
+  setInterval(epRender,1500);
+})();
+</script>
+<!-- End Ehab Pro VIP + Assistant -->
+
 </body>
 </html>
