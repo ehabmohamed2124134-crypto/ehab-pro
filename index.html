@@ -1048,5 +1048,318 @@ epRenderAll();
 </script>
 <!-- End Ehab Pro Useful Tools Add-on -->
 
+<!-- Ehab Pro: Improved Cars + Mini Garage -->
+<style>
+#ep-garage{
+  margin:14px 0;padding:15px;border-radius:16px;
+  border:1px solid #315783;
+  background:linear-gradient(145deg,#142b4b,#071329);
+  color:#f4f8ff
+}
+#ep-garage h3{margin:0 0 8px;color:#00d5ff}
+#ep-garage .ep-garage-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px
+}
+#ep-garage label{font-size:13px;color:#c4d5ee}
+#ep-garage select{
+  display:block;width:100%;padding:10px;margin:5px 0;
+  background:#071329;color:white;border:1px solid #315783;border-radius:9px
+}
+#ep-garage .ep-garage-note{font-size:12px;color:#b6c8e4}
+#ep-garage .ep-garage-preview{
+  height:100px;border-radius:12px;background:
+  radial-gradient(ellipse at center,#243f60,#081329 72%);
+  display:grid;place-items:center;margin:10px 0
+}
+#ep-garage .ep-preview-car{width:45px;height:76px;border-radius:15px;
+  background:linear-gradient(90deg,#0865a9,#26c9ff,#0871b9);
+  border:2px solid #9eeaff;box-shadow:0 0 18px #00bfff88;
+  position:relative;transform:rotate(0deg)}
+#ep-garage .ep-preview-car:before{
+  content:"";position:absolute;left:6px;right:6px;top:17px;height:24px;
+  border-radius:9px;background:linear-gradient(#b9f0ff,#173955);
+  border:1px solid #d6f6ff
+}
+#ep-garage .ep-preview-car:after{
+  content:"";position:absolute;left:9px;right:9px;bottom:8px;height:8px;
+  border-radius:3px;background:#14243b;border-top:2px solid #9eeaff
+}
+#ep-garage .ep-garage-btn{
+  width:100%;border:0;border-radius:10px;padding:11px;
+  color:white;background:linear-gradient(100deg,#168bff,#00aeea);
+  font-weight:bold
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+
+const EP_CAR_KEY="ehabProCarGarageV1";
+const EP_CAR_COLORS={
+  blue:"#14b8ff",
+  red:"#f04452",
+  purple:"#a855f7",
+  green:"#19c98a",
+  gold:"#ffbd35",
+  white:"#eaf3ff"
+};
+const EP_CAR_NAMES={
+  sport:"🏎️ سوبر كار",
+  race:"🏁 سيارة سباق",
+  suv:"🚙 SUV رياضية"
+};
+let epCar={color:"blue",model:"sport"};
+
+try{
+  const saved=JSON.parse(localStorage.getItem(EP_CAR_KEY)||"null");
+  if(saved&&EP_CAR_COLORS[saved.color]&&EP_CAR_NAMES[saved.model]){
+    epCar=saved;
+  }
+}catch(e){}
+
+function epCarSave(){
+  try{localStorage.setItem(EP_CAR_KEY,JSON.stringify(epCar));}
+  catch(e){}
+}
+
+function epCarMakeGarage(){
+  const race=document.querySelector("#race .panel");
+  if(!race||document.getElementById("ep-garage"))return;
+
+  const garage=document.createElement("div");
+  garage.id="ep-garage";
+  garage.innerHTML=`
+    <h3>🏎️ جراج Ehab Pro</h3>
+    <p>اختار شكل العربية ولونها، وشوف التغيير داخل السباق.</p>
+    <div class="ep-garage-preview">
+      <div class="ep-preview-car" id="ep-car-preview"></div>
+    </div>
+    <div class="ep-garage-grid">
+      <div>
+        <label for="ep-car-model">موديل العربية</label>
+        <select id="ep-car-model">
+          <option value="sport">🏎️ سوبر كار</option>
+          <option value="race">🏁 سيارة سباق</option>
+          <option value="suv">🚙 SUV رياضية</option>
+        </select>
+      </div>
+      <div>
+        <label for="ep-car-color">لون الدهان</label>
+        <select id="ep-car-color">
+          <option value="blue">أزرق نيون</option>
+          <option value="red">أحمر رياضي</option>
+          <option value="purple">بنفسجي</option>
+          <option value="green">أخضر</option>
+          <option value="gold">ذهبي</option>
+          <option value="white">أبيض لؤلؤي</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" class="ep-garage-btn" id="ep-car-apply">🎨 تطبيق شكل العربية</button>
+    <p class="ep-garage-note">التغييرات شكلية ومجانية، ولا تخصم أي نقاط.</p>
+  `;
+  const controls=race.querySelector(".controls");
+  if(controls)race.insertBefore(garage,controls);
+  else race.appendChild(garage);
+
+  document.getElementById("ep-car-model").value=epCar.model;
+  document.getElementById("ep-car-color").value=epCar.color;
+  epCarPreview();
+
+  document.getElementById("ep-car-apply").addEventListener("click",()=>{
+    epCar.model=document.getElementById("ep-car-model").value;
+    epCar.color=document.getElementById("ep-car-color").value;
+    epCarSave();
+    epCarPreview();
+    if(typeof window.drawRace==="function")window.drawRace();
+    document.getElementById("ep-car-apply").textContent="✅ تم تحديث العربية";
+    setTimeout(()=>{
+      const b=document.getElementById("ep-car-apply");
+      if(b)b.textContent="🎨 تطبيق شكل العربية";
+    },1500);
+  });
+}
+
+function epCarPreview(){
+  const p=document.getElementById("ep-car-preview");
+  if(!p)return;
+  const color=EP_CAR_COLORS[epCar.color]||EP_CAR_COLORS.blue;
+  p.style.background=`linear-gradient(90deg,#101827,${color},#ffffff66,${color},#101827)`;
+  p.style.borderColor=color;
+  p.style.boxShadow=`0 0 18px ${color}88`;
+  p.style.width=epCar.model==="suv"?"53px":"45px";
+  p.style.height=epCar.model==="race"?"82px":epCar.model==="suv"?"70px":"76px";
+}
+
+/*
+  نستبدل رسمة السيارة فقط.
+  منطق السباق، الاصطدامات، المسافة والنقاط يظل كما هو.
+*/
+window.drawCar=function(lane,y,color){
+  const c=window.ctx;
+  /*
+    ctx معرّف داخل سكربت السباق الأصلي.
+    نستخدمه مباشرةً في النطاق العام للصفحة.
+  */
+  const drawContext=typeof ctx!=="undefined"?ctx:null;
+  if(!drawContext)return;
+
+  const g=drawContext;
+  const roadLeft=45,roadWidth=270;
+  const centerX=roadLeft+roadWidth*(lane+0.5)/3;
+  const isPlayer=color==="#14b8ff";
+  const paint=isPlayer?(EP_CAR_COLORS[epCar.color]||color):color;
+  const model=isPlayer?epCar.model:"sport";
+  const w=model==="suv"?43:model==="race"?35:38;
+  const h=model==="suv"?59:model==="race"?57:56;
+  const x=centerX-w/2;
+
+  g.save();
+  g.translate(centerX,y+h/2);
+
+  // ظل ناعم تحت العربية
+  g.fillStyle="#00000066";
+  g.beginPath();
+  g.ellipse(2,5,w*.63,h*.55,0,0,Math.PI*2);
+  g.fill();
+
+  // العجلات
+  const tireW=model==="suv"?8:7;
+  const tireH=14;
+  const wheelX=w/2-tireW/2+1;
+  const wheelYs=[-h*.29,h*.24];
+  g.fillStyle="#070b12";
+  wheelYs.forEach(wy=>{
+    [-wheelX,wheelX].forEach(wx=>{
+      g.beginPath();
+      g.roundRect(wx-tireW/2,wy-tireH/2,tireW,tireH,2);
+      g.fill();
+      g.strokeStyle="#6c7a8d";
+      g.lineWidth=1;
+      g.stroke();
+      g.fillStyle="#aeb8c7";
+      g.fillRect(wx-tireW/2+2,wy-tireH/2+3,tireW-4,2);
+      g.fillStyle="#070b12";
+    });
+  });
+
+  // جناح خلفي لسيارة السباق
+  if(model==="race"){
+    g.fillStyle="#171f2b";
+    g.fillRect(-w*.56,-h*.45,w*1.12,5);
+    g.fillRect(-w*.42,-h*.37,4,7);
+    g.fillRect(w*.32,-h*.37,4,7);
+  }
+
+  // جسم السيارة بتدرج لوني
+  const body=g.createLinearGradient(-w/2,0,w/2,0);
+  body.addColorStop(0,"#111a29");
+  body.addColorStop(.14,paint);
+  body.addColorStop(.43,paint);
+  body.addColorStop(.56,"#ffffff77");
+  body.addColorStop(.78,paint);
+  body.addColorStop(1,"#101827");
+
+  g.fillStyle=body;
+  g.strokeStyle="#d8f4ff";
+  g.lineWidth=1.1;
+
+  g.beginPath();
+  if(model==="suv"){
+    g.roundRect(-w/2,-h/2,w,h,8);
+  }else{
+    g.moveTo(-w*.29,-h/2);
+    g.quadraticCurveTo(-w*.43,-h*.48,-w*.39,-h*.25);
+    g.lineTo(-w*.48,h*.22);
+    g.quadraticCurveTo(-w*.48,h*.45,-w*.28,h*.48);
+    g.lineTo(w*.28,h*.48);
+    g.quadraticCurveTo(w*.48,h*.45,w*.48,h*.22);
+    g.lineTo(w*.39,-h*.25);
+    g.quadraticCurveTo(w*.43,-h*.48,w*.29,-h/2);
+    g.closePath();
+  }
+  g.fill();g.stroke();
+
+  // خطوط جانبية رياضية
+  if(model==="race"){
+    g.strokeStyle="#ffffffcc";
+    g.lineWidth=2;
+    g.beginPath();
+    g.moveTo(-w*.22,-h*.24);
+    g.lineTo(-w*.22,h*.35);
+    g.moveTo(w*.22,-h*.24);
+    g.lineTo(w*.22,h*.35);
+    g.stroke();
+  }
+
+  // الزجاج الأمامي
+  const glass=g.createLinearGradient(0,-h*.36,0,h*.02);
+  glass.addColorStop(0,"#d8f7ff");
+  glass.addColorStop(.25,"#5797b7");
+  glass.addColorStop(1,"#10263d");
+  g.fillStyle=glass;
+  g.strokeStyle="#d9f4ff";
+  g.lineWidth=1;
+
+  g.beginPath();
+  g.moveTo(-w*.29,-h*.28);
+  g.lineTo(-w*.22,-h*.08);
+  g.quadraticCurveTo(0,-h*.02,w*.22,-h*.08);
+  g.lineTo(w*.29,-h*.28);
+  g.quadraticCurveTo(0,-h*.37,-w*.29,-h*.28);
+  g.closePath();
+  g.fill();g.stroke();
+
+  // السقف والزجاج الخلفي
+  g.fillStyle="#152a41";
+  g.beginPath();
+  g.roundRect(-w*.28,-h*.02,w*.56,h*.20,4);
+  g.fill();
+  g.strokeStyle="#9bdff5";
+  g.stroke();
+
+  g.fillStyle="#8bc9e8";
+  g.beginPath();
+  g.moveTo(-w*.22,h*.22);
+  g.lineTo(-w*.27,h*.35);
+  g.quadraticCurveTo(0,h*.41,w*.27,h*.35);
+  g.lineTo(w*.22,h*.22);
+  g.closePath();
+  g.fill();
+
+  // الكشافات الأمامية
+  g.fillStyle="#fff5bd";
+  g.shadowColor="#fff0a3";
+  g.shadowBlur=7;
+  g.beginPath();
+  g.roundRect(-w*.38,-h*.44,w*.22,4,2);
+  g.roundRect(w*.16,-h*.44,w*.22,4,2);
+  g.fill();
+  g.shadowBlur=0;
+
+  // المصابيح الخلفية
+  g.fillStyle="#ff314e";
+  g.fillRect(-w*.35,h*.39,w*.23,3);
+  g.fillRect(w*.12,h*.39,w*.23,3);
+
+  // شعار صغير
+  g.fillStyle="#ffffffcc";
+  g.beginPath();
+  g.arc(0,h*.31,2,0,Math.PI*2);
+  g.fill();
+
+  g.restore();
+};
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",epCarMakeGarage);
+}else{
+  epCarMakeGarage();
+}
+})();
+</script>
+<!-- End Improved Cars + Mini Garage -->
+
 </body>
 </html>
