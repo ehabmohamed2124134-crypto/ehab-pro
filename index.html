@@ -1361,5 +1361,398 @@ if(document.readyState==="loading"){
 </script>
 <!-- End Improved Cars + Mini Garage -->
 
+<!-- Ehab Pro Racing Expansion: Garage, Missions, City Race, Settings, Records -->
+<style>
+#epr{font-family:Tahoma,Arial,sans-serif;color:#f3f7ff;background:#07111f;border:1px solid #254568;border-radius:18px;padding:14px;margin:20px auto;max-width:1000px;box-sizing:border-box}
+#epr *{box-sizing:border-box}
+#epr h2,#epr h3{color:#39d5ff}
+#epr .epr-card{background:#101f35;border:1px solid #29415f;border-radius:13px;padding:12px;margin:9px 0}
+#epr .epr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+#epr .epr-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+#epr button,#epr select{border:0;border-radius:9px;padding:10px;margin:3px;background:#168bff;color:white;font-weight:bold;cursor:pointer}
+#epr button:disabled{opacity:.45;cursor:default}
+#epr .epr-tab{background:#213651}
+#epr .epr-tab.active{background:#168bff}
+#epr .epr-view{display:none}
+#epr .epr-view.active{display:block}
+#epr .epr-muted{font-size:12px;color:#b9c9df}
+#epr .epr-stat{font-size:25px;font-weight:bold;color:#3bd8ff}
+#epr .epr-carbox{background:radial-gradient(ellipse,#244568,#0a1525 72%);padding:15px;border-radius:12px;text-align:center}
+#epr .epr-car{display:inline-block;width:46px;height:75px;border-radius:14px 14px 8px 8px;border:2px solid #c6f6ff;position:relative;box-shadow:0 0 20px #168bff77}
+#epr .epr-car:before{content:"";position:absolute;left:7px;right:7px;top:15px;height:24px;border-radius:7px;background:linear-gradient(#c6f3ff,#244760);border:1px solid #b9eaff}
+#epr .epr-car:after{content:"";position:absolute;left:10px;right:10px;bottom:8px;height:7px;background:#172439;border-top:2px solid white}
+#epr .epr-input{width:100%;padding:10px;border-radius:8px;background:#07111f;color:white;border:1px solid #355474;margin:5px 0}
+#epr canvas{width:100%;display:block;background:#101e30;border-radius:12px;touch-action:manipulation}
+#epr .epr-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+#epr .epr-controls button{min-width:70px;font-size:18px}
+#epr .epr-progress{height:9px;background:#273b55;border-radius:9px;overflow:hidden}
+#epr .epr-progress span{display:block;height:100%;width:0;background:#28d7ff}
+</style>
+
+<section id="epr">
+  <h2>🏁 Ehab Pro Racing Expansion</h2>
+  <p class="epr-muted">الجراج • سباقات المدينة • المهمات • الإعدادات • الأرقام القياسية</p>
+
+  <div class="epr-grid">
+    <div class="epr-card">🪙 نقاط السباق الجديدة<div class="epr-stat" id="epr-points">0</div></div>
+    <div class="epr-card">🏆 أفضل نتيجة<div class="epr-stat" id="epr-best">0</div></div>
+    <div class="epr-card">🚘 العربيات المفتوحة<div class="epr-stat" id="epr-owned">1</div></div>
+    <div class="epr-card">🏁 السباقات المكتملة<div class="epr-stat" id="epr-races">0</div></div>
+  </div>
+
+  <div class="epr-tabs">
+    <button class="epr-tab active" data-epr-tab="garage">🚘 الجراج</button>
+    <button class="epr-tab" data-epr-tab="race">🌆 سباق المدينة</button>
+    <button class="epr-tab" data-epr-tab="missions">🎯 المهمات</button>
+    <button class="epr-tab" data-epr-tab="settings">⚙️ الإعدادات</button>
+    <button class="epr-tab" data-epr-tab="records">🏆 السجلات</button>
+  </div>
+
+  <div class="epr-view active" data-epr-view="garage">
+    <div class="epr-card">
+      <h3>🚘 جراج السيارات</h3>
+      <div class="epr-carbox"><div class="epr-car" id="epr-preview"></div></div>
+      <p id="epr-car-name">سيارة البداية</p>
+      <div class="epr-grid">
+        <div>
+          <label>اختار السيارة</label>
+          <select id="epr-car-select" class="epr-input">
+            <option value="starter">Street X — مجانية</option>
+            <option value="sport">Falcon GT — 100 نقطة</option>
+            <option value="racer">Neon Racer — 180 نقطة</option>
+            <option value="suv">Storm SUV — 140 نقطة</option>
+          </select>
+          <button id="epr-buy" style="width:100%">شراء / اختيار السيارة</button>
+        </div>
+        <div>
+          <label>لون السيارة</label>
+          <select id="epr-color" class="epr-input">
+            <option value="#19bfff">أزرق نيون</option>
+            <option value="#ff4057">أحمر</option>
+            <option value="#a855f7">بنفسجي</option>
+            <option value="#1ed69a">أخضر</option>
+            <option value="#ffc247">ذهبي</option>
+            <option value="#f2f5ff">أبيض</option>
+          </select>
+          <button id="epr-paint" style="width:100%">تغيير الدهان — 10 نقاط</button>
+        </div>
+      </div>
+    </div>
+    <div class="epr-card">
+      <h3>🔧 تطوير السيارة</h3>
+      <p>المستوى الحالي لكل تطوير: <b id="epr-upgrade-levels">سرعة 0 • فرامل 0 • تحكم 0</b></p>
+      <div class="epr-grid">
+        <div><p>⚡ السرعة</p><button data-epr-upgrade="speed">تطوير السرعة — 40 نقطة</button></div>
+        <div><p>🛑 الفرامل</p><button data-epr-upgrade="brakes">تطوير الفرامل — 30 نقطة</button></div>
+        <div><p>🛞 التحكم</p><button data-epr-upgrade="handling">تطوير التحكم — 35 نقطة</button></div>
+      </div>
+      <p class="epr-muted">نقاط هذا الجراج مستقلة عن نقاط الألعاب القديمة حتى لا نغيّر حفظها بالخطأ.</p>
+    </div>
+  </div>
+
+  <div class="epr-view" data-epr-view="race">
+    <div class="epr-card">
+      <h3>🌆 سباق المدينة</h3>
+      <p>تحرك بين الحارات لتفادي السيارات والعقبات. كلما صمدت أكثر زادت نقاط الجولة.</p>
+      <canvas id="epr-canvas" width="360" height="520" aria-label="لعبة سباق سيارات"></canvas>
+      <div class="epr-controls">
+        <button id="epr-left" aria-label="تحرك يسار">⬅️</button>
+        <button id="epr-start">▶️ ابدأ</button>
+        <button id="epr-right" aria-label="تحرك يمين">➡️</button>
+      </div>
+      <div class="epr-controls">
+        <button id="epr-pause" class="epr-tab">⏸️ إيقاف مؤقت</button>
+      </div>
+      <p id="epr-status" aria-live="polite">اضغط ابدأ لبدء السباق.</p>
+      <div class="epr-progress"><span id="epr-distance-bar"></span></div>
+      <p class="epr-muted">تقدر تستخدم أزرار اللمس أو أسهم لوحة المفاتيح.</p>
+    </div>
+  </div>
+
+  <div class="epr-view" data-epr-view="missions">
+    <div class="epr-card">
+      <h3>🎯 المهمات اليومية</h3>
+      <p class="epr-muted">المهمات تتجدد حسب التاريخ المحلي للجهاز. المكافأة تُسجل مرة واحدة لكل مهمة في اليوم.</p>
+      <div id="epr-mission-list"></div>
+    </div>
+  </div>
+
+  <div class="epr-view" data-epr-view="settings">
+    <div class="epr-card">
+      <h3>⚙️ إعدادات السباق</h3>
+      <label><input type="checkbox" id="epr-sound"> تشغيل أصوات اللعبة</label>
+      <p><label>سرعة اللعبة</label></p>
+      <select id="epr-difficulty" class="epr-input">
+        <option value="easy">سهل</option>
+        <option value="normal">عادي</option>
+        <option value="hard">صعب</option>
+      </select>
+      <p><label>حجم أزرار التحكم</label></p>
+      <select id="epr-controls-size" class="epr-input">
+        <option value="normal">عادي</option>
+        <option value="large">كبير للتابلت</option>
+      </select>
+      <button id="epr-save-settings">حفظ الإعدادات</button>
+      <p class="epr-muted">الصوت يحتاج تفاعلًا من المستخدم أولًا، وقد لا يعمل في بعض أوضاع المتصفح.</p>
+    </div>
+  </div>
+
+  <div class="epr-view" data-epr-view="records">
+    <div class="epr-card">
+      <h3>🏆 سجلاتك</h3>
+      <div id="epr-record-list"></div>
+      <button id="epr-backup">تنزيل نسخة احتياطية من بيانات الإضافة</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+"use strict";
+const ROOT=document.getElementById("epr");
+if(!ROOT||ROOT.dataset.ready)return;
+ROOT.dataset.ready="1";
+const $=id=>document.getElementById("epr-"+id);
+const STORE="ehabProRacingExpansionV1";
+const cars={
+ starter:{name:"Street X",price:0,color:"#19bfff",speed:1},
+ sport:{name:"Falcon GT",price:100,color:"#ff4057",speed:1.15},
+ racer:{name:"Neon Racer",price:180,color:"#a855f7",speed:1.3},
+ suv:{name:"Storm SUV",price:140,color:"#1ed69a",speed:.95}
+};
+const fresh=()=>({
+ points:0,best:0,races:0,owned:["starter"],car:"starter",
+ paint:"#19bfff",upgrades:{speed:0,brakes:0,handling:0},
+ settings:{sound:false,difficulty:"normal",large:false},
+ missions:{date:"",done:[],races:0,score:0},
+ history:[]
+});
+let data=fresh();
+try{
+ const saved=JSON.parse(localStorage.getItem(STORE)||"null");
+ if(saved&&typeof saved==="object"&&!Array.isArray(saved)){
+  data={...fresh(),...saved};
+  if(!Array.isArray(data.owned))data.owned=["starter"];
+  if(!Array.isArray(data.history))data.history=[];
+  data.upgrades={...fresh().upgrades,...(data.upgrades||{})};
+  data.settings={...fresh().settings,...(data.settings||{})};
+  data.missions={...fresh().missions,...(data.missions||{})};
+ }
+}catch(e){}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(data))}catch(e){status("تعذر حفظ البيانات؛ راجع مساحة المتصفح.")}}
+function status(t){$("status").textContent=t}
+function safe(n){return Number.isFinite(n)?Math.max(0,n):0}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function ensureDay(){
+ if(data.missions.date!==today()){
+  data.missions={date:today(),done:[],races:0,score:0};
+ }
+}
+function award(n){data.points+=n;save();render()}
+function renderStats(){
+ $("points").textContent=data.points;
+ $("best").textContent=data.best;
+ $("owned").textContent=data.owned.length;
+ $("races").textContent=data.races;
+ $("upgrade-levels").textContent=
+  "سرعة "+data.upgrades.speed+" • فرامل "+data.upgrades.brakes+" • تحكم "+data.upgrades.handling;
+}
+function renderGarage(){
+ const car=cars[data.car]||cars.starter;
+ $("preview").style.background="linear-gradient(90deg,#111827,"+data.paint+",#ffffff88,"+data.paint+",#111827)";
+ $("preview").style.borderColor=data.paint;
+ $("preview").style.boxShadow="0 0 20px "+data.paint+"88";
+ $("car-name").textContent=car.name+" — "+(data.owned.includes(data.car)?"مملوكة":"غير مملوكة");
+ $("car-select").value=data.car;
+ $("color").value=data.paint;
+}
+function renderMissions(){
+ ensureDay();
+ const box=$("mission-list");box.replaceChildren();
+ const missions=[
+  {id:"race1",title:"أكمل أول سباق اليوم",reward:25,ok:data.missions.races>=1},
+  {id:"score100",title:"اجمع 100 نقطة في سباقات اليوم",reward:35,ok:data.missions.score>=100},
+  {id:"race3",title:"أكمل 3 سباقات اليوم",reward:50,ok:data.missions.races>=3}
+ ];
+ missions.forEach(m=>{
+  const row=document.createElement("div");row.className="epr-card";
+  const title=document.createElement("b");title.textContent=(data.missions.done.includes(m.id)?"✅ ":"🎯 ")+m.title;
+  const p=document.createElement("p");p.textContent="المكافأة: "+m.reward+" نقطة";
+  const b=document.createElement("button");
+  b.textContent=data.missions.done.includes(m.id)?"تم استلام المكافأة":m.ok?"استلام المكافأة":"المهمة لم تكتمل";
+  b.disabled=!m.ok||data.missions.done.includes(m.id);
+  b.onclick=()=>{
+   ensureDay();
+   if(!m.ok||data.missions.done.includes(m.id))return;
+   data.missions.done.push(m.id);data.points+=m.reward;save();render();
+  };
+  row.append(title,p,b);box.append(row);
+ });
+}
+function renderRecords(){
+ const box=$("record-list");box.replaceChildren();
+ const lines=[
+  "أعلى نتيجة: "+data.best,
+  "عدد السباقات المكتملة: "+data.races,
+  "السيارة المختارة: "+cars[data.car].name,
+  "تطوير السرعة: "+data.upgrades.speed,
+  "تطوير الفرامل: "+data.upgrades.brakes,
+  "تطوير التحكم: "+data.upgrades.handling
+ ];
+ lines.forEach(t=>{const d=document.createElement("div");d.className="epr-card";d.textContent=t;box.append(d)});
+}
+function renderSettings(){
+ $("sound").checked=!!data.settings.sound;
+ $("difficulty").value=data.settings.difficulty;
+ $("controls-size").value=data.settings.large?"large":"normal";
+ $("left").style.minHeight=$("right").style.minHeight=data.settings.large?"70px":"45px";
+}
+function render(){
+ renderStats();renderGarage();renderMissions();renderRecords();renderSettings();
+}
+ROOT.querySelectorAll("[data-epr-tab]").forEach(b=>b.addEventListener("click",()=>{
+ ROOT.querySelectorAll("[data-epr-tab]").forEach(x=>x.classList.toggle("active",x===b));
+ ROOT.querySelectorAll("[data-epr-view]").forEach(v=>v.classList.toggle("active",v.dataset.eprView===b.dataset.eprTab));
+ if(b.dataset.eprTab==="race")draw();
+}));
+$("buy").onclick=()=>{
+ const id=$("car-select").value,car=cars[id];
+ if(!data.owned.includes(id)){
+  if(data.points<car.price){status("محتاج "+car.price+" نقطة لشراء "+car.name+".");return}
+  if(!confirm("شراء "+car.name+" مقابل "+car.price+" نقطة؟"))return;
+  data.points-=car.price;data.owned.push(id);
+ }
+ data.car=id;data.paint=car.color;save();render();status("تم اختيار "+car.name+"!");
+};
+$("paint").onclick=()=>{
+ if(data.points<10){status("محتاج 10 نقاط لتغيير الدهان.");return}
+ data.points-=10;data.paint=$("color").value;save();render();status("تم تغيير لون العربية!");
+};
+ROOT.querySelectorAll("[data-epr-upgrade]").forEach(b=>b.onclick=()=>{
+ const key=b.dataset.eprUpgrade;
+ const costs={speed:40,brakes:30,handling:35};
+ const cost=costs[key],level=data.upgrades[key];
+ if(level>=5){status("وصلت لأقصى مستوى للتطوير ده!");return}
+ if(data.points<cost){status("نقاطك مش كفاية للتطوير.");return}
+ data.points-=cost;data.upgrades[key]++;save();render();
+ status("تم تطوير "+({speed:"السرعة",brakes:"الفرامل",handling:"التحكم"}[key])+"!");
+});
+$("save-settings").onclick=()=>{
+ data.settings.sound=$("sound").checked;
+ data.settings.difficulty=$("difficulty").value;
+ data.settings.large=$("controls-size").value==="large";
+ save();renderSettings();status("تم حفظ الإعدادات.");
+};
+ROOT.querySelectorAll("[data-epr-tab]").forEach(b=>b.classList.toggle("active",b.dataset.eprTab==="garage"));
+let canvas=$("canvas"),c=canvas.getContext("2d");
+let running=false,paused=false,raf=0,last=0,elapsed=0,score=0,playerLane=1,obstacles=[],spawn=0,roadOffset=0;
+function rand(n){return Math.floor(Math.random()*n)}
+function draw(){
+ const w=canvas.width,h=canvas.height;
+ c.clearRect(0,0,w,h);
+ c.fillStyle="#102b27";c.fillRect(0,0,w,h);
+ const left=30,right=w-30;
+ c.fillStyle="#313b4b";c.fillRect(left,0,right-left,h);
+ c.strokeStyle="#e5eaf2";c.lineWidth=3;
+ c.setLineDash([22,20]);
+ for(let i=1;i<3;i++){c.beginPath();c.moveTo(left+(right-left)*i/3,-40+roadOffset%42);c.lineTo(left+(right-left)*i/3,h);c.stroke()}
+ c.setLineDash([]);
+ for(let i=0;i<9;i++){
+  const y=(i*76+roadOffset*1.8)%h;
+  c.fillStyle="#253d50";c.fillRect(0,y,26,4);c.fillRect(w-26,y,26,4);
+ }
+ obstacles.forEach(o=>drawCar(o.lane,o.y,o.color,o.model));
+ drawCar(playerLane,h-100,data.paint,data.car);
+ if(!running){
+  c.fillStyle="#07111fcc";c.fillRect(35,190,w-70,115);
+  c.fillStyle="#ffffff";c.textAlign="center";c.font="bold 19px Tahoma";
+  c.fillText(paused?"إيقاف مؤقت":"جاهز للسباق؟",w/2,232);
+  c.font="14px Tahoma";c.fillText("اضغط ابدأ",w/2,263);
+ }
+}
+function drawCar(lane,y,color,model){
+ const roadL=30,roadW=canvas.width-60,x=roadL+roadW*(lane+.5)/3;
+ const w=model==="suv"?39:33,h=model==="suv"?56:53;
+ c.save();c.translate(x,y);
+ c.fillStyle="#0008";c.beginPath();c.ellipse(2,4,w*.6,h*.5,0,0,Math.PI*2);c.fill();
+ c.fillStyle="#080d15";
+ [-1,1].forEach(s=>{c.fillRect(s*w*.37-w*.07,-h*.27,w*.14,12);c.fillRect(s*w*.37-w*.07,h*.13,w*.14,12)});
+ const grad=c.createLinearGradient(-w/2,0,w/2,0);grad.addColorStop(0,"#17202d");grad.addColorStop(.3,color);grad.addColorStop(.5,"#ffffff88");grad.addColorStop(.7,color);grad.addColorStop(1,"#17202d");
+ c.fillStyle=grad;c.strokeStyle="#d5f5ff";c.lineWidth=1.2;
+ c.beginPath();c.moveTo(-w*.28,-h/2);c.quadraticCurveTo(-w*.46,-h*.42,-w*.42,-h*.2);c.lineTo(-w*.48,h*.3);c.quadraticCurveTo(-w*.4,h*.5,-w*.25,h*.5);c.lineTo(w*.25,h*.5);c.quadraticCurveTo(w*.4,h*.5,w*.48,h*.3);c.lineTo(w*.42,-h*.2);c.quadraticCurveTo(w*.46,-h*.42,w*.28,-h/2);c.closePath();c.fill();c.stroke();
+ c.fillStyle="#92dcf7";c.beginPath();c.moveTo(-w*.28,-h*.28);c.lineTo(-w*.2,-h*.05);c.lineTo(w*.2,-h*.05);c.lineTo(w*.28,-h*.28);c.closePath();c.fill();
+ c.fillStyle="#172b42";c.fillRect(-w*.22,0,w*.44,h*.18);
+ c.fillStyle="#ff4057";c.fillRect(-w*.34,h*.38,w*.2,4);c.fillRect(w*.14,h*.38,w*.2,4);
+ c.fillStyle="#fff2b0";c.fillRect(-w*.34,-h*.44,w*.2,4);c.fillRect(w*.14,-h*.44,w*.2,4);
+ c.restore();
+}
+function finish(){
+ if(!running)return;
+ running=false;cancelAnimationFrame(raf);
+ const earned=Math.max(5,Math.floor(score/4));
+ data.points+=earned;data.best=Math.max(data.best,Math.floor(score));data.races++;
+ ensureDay();data.missions.races++;data.missions.score+=earned;
+ data.history.unshift({date:today(),score:Math.floor(score),earned});
+ data.history=data.history.slice(0,20);
+ save();render();
+ status("انتهى السباق! نتيجتك "+Math.floor(score)+"، وكسبت "+earned+" نقطة في الجراج.");
+ draw();
+}
+function frame(t){
+ if(!running)return;
+ if(paused){raf=requestAnimationFrame(frame);return}
+ const dt=Math.min((t-last)/16.67||1,2.5);last=t;
+ const difficulty={easy:.8,normal:1,hard:1.3}[data.settings.difficulty]||1;
+ elapsed+=dt;score+=dt*(cars[data.car].speed+data.upgrades.speed*.05)*difficulty;
+ roadOffset+=5*dt*difficulty;spawn+=dt;
+ if(spawn>Math.max(18,45-data.upgrades.handling*2)){
+  spawn=0;obstacles.push({lane:rand(3),y:-65,color:["#ff4057","#ffc247","#a855f7","#1ed69a"][rand(4)],model:"sport"});
+ }
+ obstacles.forEach(o=>o.y+=4.1*dt*difficulty);
+ obstacles=obstacles.filter(o=>o.y<canvas.height+70);
+ const py=canvas.height-100;
+ const hit=obstacles.some(o=>o.lane===playerLane&&o.y>py-40&&o.y<py+35);
+ $("distance-bar").style.width=(score%100)+"%";
+ if(hit){finish();return}
+ if(score>=500){finish();return}
+ draw();raf=requestAnimationFrame(frame);
+}
+function start(){
+ if(running)return;
+ running=true;paused=false;elapsed=0;score=0;spawn=0;last=performance.now();obstacles=[];
+ playerLane=1;$("start").disabled=true;status("انطلق! تفادى السيارات.");raf=requestAnimationFrame(frame);
+}
+$("start").onclick=start;
+$("pause").onclick=()=>{
+ if(!running)return;
+ paused=!paused;$("pause").textContent=paused?"▶️ استكمال":"⏸️ إيقاف مؤقت";
+ status(paused?"السباق متوقف مؤقتًا.":"السباق مستمر!");
+};
+function move(dir){
+ if(!running||paused)return;
+ playerLane=Math.max(0,Math.min(2,playerLane+dir));
+ if(data.settings.sound){
+  try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.frequency.value=330;g.gain.value=.025;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.045);o.onended=()=>a.close()}catch(e){}
+ }
+ draw();
+}
+$("left").onclick=()=>move(-1);$("right").onclick=()=>move(1);
+document.addEventListener("keydown",e=>{
+ if(!ROOT.contains(document.activeElement)&&!ROOT.contains(e.target))return;
+ if(e.key==="ArrowLeft"){e.preventDefault();move(-1)}
+ if(e.key==="ArrowRight"){e.preventDefault();move(1)}
+});
+$("backup").onclick=()=>{
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="ehab-pro-racing-backup.json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+window.addEventListener("pagehide",()=>{if(running){running=false;cancelAnimationFrame(raf);save()}});
+render();draw();
+})();
+</script>
+<!-- End Ehab Pro Racing Expansion -->
+
 </body>
 </html>
