@@ -1754,5 +1754,675 @@ render();draw();
 </script>
 <!-- End Ehab Pro Racing Expansion -->
 
+<!-- Ehab Pro Ultimate Expansion -->
+<style>
+#ehx{--bg:#091321;--panel:#12223a;--line:#2b4262;--txt:#eff6ff;--accent:#38d9ff;--muted:#a9bdd8;direction:rtl;font-family:Tahoma,Arial,sans-serif;color:var(--txt);background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:14px;margin:22px auto;max-width:1050px;box-sizing:border-box;overflow:hidden}
+#ehx *{box-sizing:border-box}
+#ehx h2,#ehx h3{color:var(--accent);margin-top:5px}
+#ehx p{line-height:1.7}
+#ehx .ehx-muted{color:var(--muted);font-size:13px}
+#ehx .ehx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px}
+#ehx .ehx-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;min-width:0}
+#ehx .ehx-stat{font-size:25px;font-weight:bold;color:var(--accent)}
+#ehx .ehx-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+#ehx button,#ehx select,#ehx input,#ehx textarea{font:inherit;border-radius:10px;padding:10px;max-width:100%}
+#ehx button{background:var(--accent);color:#071321;border:0;font-weight:bold;cursor:pointer}
+#ehx button:disabled{opacity:.45}
+#ehx .ehx-tab{background:#263b58;color:white}
+#ehx .ehx-tab.active{background:var(--accent);color:#071321}
+#ehx .ehx-view{display:none}
+#ehx .ehx-view.active{display:block}
+#ehx .ehx-input{width:100%;background:#081322;color:white;border:1px solid var(--line);margin:4px 0}
+#ehx .ehx-btnrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+#ehx .ehx-btnrow button{flex:1}
+#ehx .ehx-wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+#ehx-wheel{width:min(100%,300px);height:auto;aspect-ratio:1;border-radius:50%;background:#15243b;box-shadow:0 0 25px #38d9ff33}
+#ehx .ehx-chat{height:230px;overflow:auto;background:#07111e;border-radius:10px;padding:9px}
+#ehx .ehx-msg{padding:9px;margin:7px 0;border-radius:10px;background:#19304c;overflow-wrap:anywhere}
+#ehx .ehx-msg.user{background:#164b68}
+#ehx .ehx-progress{height:9px;background:#263a55;border-radius:10px;overflow:hidden}
+#ehx .ehx-progress span{height:100%;width:0;display:block;background:var(--accent)}
+#ehx .ehx-theme{min-height:65px;border:2px solid #ffffff44}
+#ehx .ehx-big{font-size:30px;font-weight:bold;text-align:center;padding:15px}
+#ehx .ehx-pill{display:inline-block;background:#243e5c;padding:5px 9px;border-radius:20px;margin:3px}
+#ehx .ehx-small{font-size:12px;color:var(--muted)}
+#ehx .ehx-answer{background:#1c304a;color:white;border:1px solid #466080;width:100%;text-align:right;margin:4px 0}
+#ehx .ehx-answer:active{background:#235c78}
+</style>
+
+<section id="ehx">
+  <h2>🚀 Ehab Pro — Ultimate Expansion</h2>
+  <p class="ehx-muted">مركز الألعاب والذكاء والجوائز والتحديات والأدوات والأسرار</p>
+
+  <div class="ehx-grid">
+    <div class="ehx-card">⭐ المستوى <div class="ehx-stat" id="ehx-level">1</div><div class="ehx-small" id="ehx-title">مبتدئ</div></div>
+    <div class="ehx-card">✨ نقاط الخبرة XP <div class="ehx-stat" id="ehx-xp">0</div><div class="ehx-progress"><span id="ehx-xpbar"></span></div></div>
+    <div class="ehx-card">🪙 عملات الإضافة <div class="ehx-stat" id="ehx-coins">0</div><div class="ehx-small">مستقلة عن نقاط الألعاب القديمة</div></div>
+    <div class="ehx-card">🏅 الإنجازات <div class="ehx-stat" id="ehx-achievements">0</div><div class="ehx-small" id="ehx-streak">ابدأ مغامرتك!</div></div>
+  </div>
+
+  <div class="ehx-tabs">
+    <button class="ehx-tab active" data-ehx-tab="home">🏠 الرئيسية</button>
+    <button class="ehx-tab" data-ehx-tab="ai">🤖 المساعد</button>
+    <button class="ehx-tab" data-ehx-tab="games">🎮 الألعاب</button>
+    <button class="ehx-tab" data-ehx-tab="wheel">🎁 الجوائز</button>
+    <button class="ehx-tab" data-ehx-tab="friends">👥 الأصدقاء</button>
+    <button class="ehx-tab" data-ehx-tab="themes">🌌 الثيمات</button>
+    <button class="ehx-tab" data-ehx-tab="tools">🧰 الأدوات</button>
+    <button class="ehx-tab" data-ehx-tab="secrets">🕵️ الأسرار</button>
+  </div>
+
+  <div class="ehx-view active" data-ehx-view="home">
+    <div class="ehx-card">
+      <h3>🌟 أهلاً بك في عالم Ehab Pro</h3>
+      <p>كل نشاط يفتح لك إنجازات وخبرة. العب، اكتشف الأسرار، وشارك تحدياتك مع أصحابك!</p>
+      <div class="ehx-grid">
+        <button data-ehx-goto="games">🎮 العب الآن</button>
+        <button data-ehx-goto="wheel">🎁 جرب حظك</button>
+        <button data-ehx-goto="ai">🤖 افتح المساعد</button>
+        <button data-ehx-goto="secrets">🔐 اكتشف الأسرار</button>
+      </div>
+    </div>
+    <div class="ehx-card">
+      <h3>📜 إنجازاتك</h3>
+      <div id="ehx-ach-list"></div>
+    </div>
+    <div class="ehx-card">
+      <h3>💾 حفظ البيانات</h3>
+      <p class="ehx-muted">يتم حفظ تقدم الإضافة على نفس المتصفح والجهاز. احفظ نسخة احتياطية إذا كنت ستغيّر الجهاز أو تمسح بيانات المتصفح.</p>
+      <div class="ehx-btnrow">
+        <button id="ehx-export">تنزيل نسخة احتياطية</button>
+        <button id="ehx-import-btn">استيراد نسخة احتياطية</button>
+      </div>
+      <input type="file" id="ehx-import-file" class="ehx-input" accept=".json,application/json" hidden>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="ai">
+    <div class="ehx-card">
+      <h3>🤖 المساعد الذكي المحلي</h3>
+      <p class="ehx-muted">يساعدك في الحساب البسيط، وتنظيم الأفكار، وأسئلة الموقع. هذا إصدار محلي محدود وليس نموذج ذكاء اصطناعي كاملًا.</p>
+      <div class="ehx-chat" id="ehx-chat" aria-live="polite">
+        <div class="ehx-msg">أهلاً! أنا مساعد Ehab Pro. اكتب سؤالك أو جرّب: مساعدة، حساب 12*8، أو كيف أذاكر؟</div>
+      </div>
+      <form id="ehx-chat-form">
+        <input id="ehx-chat-input" class="ehx-input" placeholder="اكتب سؤالك هنا..." autocomplete="off" required>
+        <button type="submit">إرسال ↩️</button>
+      </form>
+      <div class="ehx-btnrow">
+        <button data-ehx-prompt="ساعدني أنظم مذاكرتي">📚 المذاكرة</button>
+        <button data-ehx-prompt="إزاي أتعلم البرمجة؟">💻 البرمجة</button>
+        <button data-ehx-prompt="مساعدة">❓ المساعدة</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="games">
+    <div class="ehx-card">
+      <h3>🎮 مركز الألعاب</h3>
+      <div class="ehx-grid">
+        <button data-ehx-game="quiz">🧠 تحدي المعلومات</button>
+        <button data-ehx-game="math">🔢 تحدي الحساب</button>
+        <button data-ehx-game="guess">🎯 خمن الرقم</button>
+        <button data-ehx-game="memory">🧩 اختبار الذاكرة</button>
+      </div>
+      <div id="ehx-game-area" class="ehx-card">
+        اختار لعبة من فوق وابدأ التحدي!
+      </div>
+      <div class="ehx-card">
+        <h3>⚡ اختبار سرعة الكتابة</h3>
+        <p id="ehx-type-prompt">اضغط ابدأ لعرض جملة قصيرة.</p>
+        <textarea id="ehx-type-input" class="ehx-input" rows="2" placeholder="اكتب الجملة هنا..."></textarea>
+        <div class="ehx-btnrow"><button id="ehx-type-start">ابدأ الاختبار</button><button id="ehx-type-check">تحقق من النتيجة</button></div>
+        <p id="ehx-type-result" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="wheel">
+    <div class="ehx-card ehx-wheel-wrap">
+      <h3>🎁 عجلة الجوائز اليومية</h3>
+      <p>لك لفة واحدة كل يوم على هذا الجهاز. الجوائز عشوائية ولا تتطلب دفعًا حقيقيًا.</p>
+      <canvas id="ehx-wheel" width="300" height="300"></canvas>
+      <button id="ehx-spin">🎡 لف العجلة</button>
+      <p id="ehx-wheel-result" aria-live="polite">مستعد؟ حظًا موفقًا!</p>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="friends">
+    <div class="ehx-card">
+      <h3>👥 تحدي الأصدقاء</h3>
+      <p>جهز تحديًا وشاركه مع أصحابك برسالة. لوحة الترتيب هنا محلية، وليست ترتيبًا مباشرًا على الإنترنت.</p>
+      <label>اسمك المستعار</label>
+      <input id="ehx-nickname" class="ehx-input" maxlength="24" placeholder="مثلاً: Ehab">
+      <label>نوع التحدي</label>
+      <select id="ehx-challenge-type" class="ehx-input">
+        <option value="quiz">تحدي المعلومات</option>
+        <option value="math">تحدي الحساب</option>
+        <option value="memory">اختبار الذاكرة</option>
+        <option value="typing">سرعة الكتابة</option>
+      </select>
+      <button id="ehx-make-challenge">إنشاء تحدي للمشاركة</button>
+      <textarea id="ehx-challenge-text" class="ehx-input" rows="4" readonly placeholder="سيظهر نص التحدي هنا"></textarea>
+      <button id="ehx-share">📤 مشاركة التحدي</button>
+      <h3>📋 سجل نتائجك المحلية</h3>
+      <div id="ehx-leaderboard"></div>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="themes">
+    <div class="ehx-card">
+      <h3>🌌 غيّر شكل الإضافة</h3>
+      <p>بعض الثيمات مجانية، والثيمات الخاصة تحتاج عملات الإضافة.</p>
+      <div class="ehx-grid" id="ehx-theme-list"></div>
+      <p id="ehx-theme-status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="tools">
+    <div class="ehx-card">
+      <h3>🧮 آلة حاسبة</h3>
+      <input id="ehx-calc-input" class="ehx-input" placeholder="مثال: (12+8)*3" inputmode="decimal">
+      <button id="ehx-calc">احسب</button>
+      <p id="ehx-calc-result" aria-live="polite"></p>
+      <p class="ehx-muted">تدعم الأرقام والأقواس والعمليات + − × ÷ والأسس البسيطة.</p>
+    </div>
+    <div class="ehx-card">
+      <h3>📝 مفكرة سريعة</h3>
+      <textarea id="ehx-notes" class="ehx-input" rows="5" placeholder="اكتب أفكارك هنا..."></textarea>
+      <button id="ehx-notes-save">حفظ الملاحظات</button>
+      <span id="ehx-notes-status" class="ehx-muted"></span>
+    </div>
+    <div class="ehx-card">
+      <h3>⏱️ مؤقت التركيز</h3>
+      <div id="ehx-timer-display" class="ehx-big">25:00</div>
+      <div class="ehx-btnrow">
+        <button data-ehx-minutes="5">5 دقائق</button>
+        <button data-ehx-minutes="15">15 دقيقة</button>
+        <button data-ehx-minutes="25">25 دقيقة</button>
+      </div>
+      <div class="ehx-btnrow">
+        <button id="ehx-timer-start">ابدأ</button>
+        <button id="ehx-timer-pause">إيقاف مؤقت</button>
+        <button id="ehx-timer-reset">إعادة</button>
+      </div>
+      <p id="ehx-timer-status" aria-live="polite"></p>
+    </div>
+    <div class="ehx-card">
+      <h3>🔄 محول الوحدات</h3>
+      <input id="ehx-unit-value" class="ehx-input" type="number" value="1" inputmode="decimal">
+      <select id="ehx-unit-type" class="ehx-input">
+        <option value="km">كيلومتر إلى متر</option>
+        <option value="m">متر إلى سنتيمتر</option>
+        <option value="kg">كيلوجرام إلى جرام</option>
+        <option value="hr">ساعة إلى دقيقة</option>
+        <option value="c">درجة مئوية إلى فهرنهايت</option>
+      </select>
+      <button id="ehx-unit-convert">تحويل</button>
+      <p id="ehx-unit-result"></p>
+    </div>
+  </div>
+
+  <div class="ehx-view" data-ehx-view="secrets">
+    <div class="ehx-card">
+      <h3>🕵️ غرفة الأسرار</h3>
+      <p>فيه كلمات سر مخفية داخل الإضافة. اكتشفها وافتح الإنجازات!</p>
+      <input id="ehx-secret-input" class="ehx-input" placeholder="اكتب الكلمة السرية">
+      <button id="ehx-secret-check">كشف السر</button>
+      <p id="ehx-secret-result" aria-live="polite"></p>
+      <div class="ehx-card">
+        <h3>🔎 تلميحات</h3>
+        <p>جرّب: EHAB أو GAMER أو PRO</p>
+        <p class="ehx-muted">الأسرار دي للمتعة فقط وليست حماية أمنية أو كلمات مرور حقيقية.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="ehx-muted" id="ehx-status" aria-live="polite">جاهز للمغامرة! ✨</p>
+</section>
+
+<script>
+(function(){
+"use strict";
+const root=document.getElementById("ehx");
+if(!root||root.dataset.loaded==="yes")return;
+root.dataset.loaded="yes";
+const $=id=>document.getElementById("ehx-"+id);
+const KEY="ehabProUltimateV1";
+const fresh=()=>({
+ xp:0,coins:0,achievements:[],claimedDate:"",theme:"blue",
+ ownedThemes:["blue"],nickname:"",notes:"",
+ stats:{games:0,correct:0,spins:0,secrets:0},
+ history:[],wheelDate:"",wheelPrize:"",
+ quizIndex:0,settings:{}
+});
+let d=fresh();
+try{
+ const old=JSON.parse(localStorage.getItem(KEY)||"null");
+ if(old&&typeof old==="object"&&!Array.isArray(old)){
+  d={...fresh(),...old};
+  d.stats={...fresh().stats,...(old.stats||{})};
+  if(!Array.isArray(d.achievements))d.achievements=[];
+  if(!Array.isArray(d.ownedThemes))d.ownedThemes=["blue"];
+  if(!Array.isArray(d.history))d.history=[];
+ }
+}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){msg("تعذر الحفظ؛ تأكد من مساحة المتصفح.")}}
+function msg(s){$("status").textContent=s}
+function safeText(el,s){el.textContent=String(s)}
+function level(){return Math.floor(d.xp/100)+1}
+function title(){
+ const l=level();
+ return l>=20?"أسطورة Ehab Pro":l>=10?"محترف خارق":l>=5?"بطل محترف":l>=3?"مغامر نشيط":"مبتدئ";
+}
+function grantXP(n,reason){
+ d.xp+=n;d.coins+=Math.max(1,Math.floor(n/5));
+ const now=level();
+ if(now>=2&&!d.achievements.includes("level2"))d.achievements.push("level2");
+ if(now>=5&&!d.achievements.includes("level5"))d.achievements.push("level5");
+ save();render();
+ msg("+"+n+" XP و+"+Math.max(1,Math.floor(n/5))+" عملات! "+(reason||"أحسنت!"));
+}
+const achievementNames={
+ first:"🌟 أول خطوة",
+ level2:"⭐ وصلت للمستوى 2",
+ level5:"🏆 وصلت للمستوى 5",
+ firstgame:"🎮 أول لعبة",
+ wheel:"🎁 أول جائزة",
+ secret:"🕵️ مكتشف الأسرار",
+ typing:"⌨️ سريع الكتابة",
+ quiz5:"🧠 خمس إجابات صحيحة",
+ focus:"⏱️ أنهيت جلسة تركيز"
+};
+function achievement(id){
+ if(d.achievements.includes(id))return;
+ d.achievements.push(id);save();render();
+}
+function render(){
+ $("level").textContent=level();
+ $("xp").textContent=d.xp;
+ $("coins").textContent=d.coins;
+ $("title").textContent=title();
+ $("xpbar").style.width=(d.xp%100)+"%";
+ $("achievements").textContent=d.achievements.length;
+ $("streak").textContent="ألعاب مكتملة: "+d.stats.games+" • إجابات صحيحة: "+d.stats.correct;
+ const list=$("ach-list");list.replaceChildren();
+ const keys=Object.keys(achievementNames);
+ if(!d.achievements.length){list.textContent="لسه مفيش إنجازات. ابدأ اللعب!";} 
+ d.achievements.forEach(id=>{
+  const p=document.createElement("span");p.className="ehx-pill";
+  p.textContent=achievementNames[id]||id;list.append(p);
+ });
+ renderThemes();renderLeaderboard();
+}
+function openTab(tab){
+ root.querySelectorAll("[data-ehx-tab]").forEach(b=>b.classList.toggle("active",b.dataset.ehxTab===tab));
+ root.querySelectorAll("[data-ehx-view]").forEach(v=>v.classList.toggle("active",v.dataset.ehxView===tab));
+}
+root.querySelectorAll("[data-ehx-tab]").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.ehxTab)));
+root.querySelectorAll("[data-ehx-goto]").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.ehxGoto)));
+function addMsg(text,who){
+ const el=document.createElement("div");el.className="ehx-msg "+(who||"");
+ el.textContent=text;$("chat").append(el);$("chat").scrollTop=$("chat").scrollHeight;
+}
+function localAssistant(raw){
+ const s=raw.trim().toLowerCase();
+ const normalized=s.replace(/[٠-٩]/g,ch=>"٠١٢٣٤٥٦٧٨٩".indexOf(ch)).replace(/[×x]/g,"*").replace(/÷/g,"/");
+ if(/^(احسب|حساب)?\s*[\d\s()+\-*/.^]+$/.test(normalized)&&/[0-9]/.test(normalized)){
+  const exp=normalized.replace(/^(احسب|حساب)\s*/,"").trim();
+  const result=calculate(exp);
+  return result.ok?"الناتج هو: "+result.value:"مش قادر أحسب التعبير ده. راجع الأرقام والعمليات.";
+ }
+ if(s.includes("مساعدة")||s.includes("بتعمل")||s.includes("help"))return "أقدر أساعدك بإرشادات عامة، وحسابات بسيطة، وأفكار للمذاكرة والبرمجة. جرّب الأسئلة المقترحة.";
+ if(s.includes("مذاكر")||s.includes("دراسة")||s.includes("ذاكر"))return "ابدأ بمهمة واحدة صغيرة، ذاكر 25 دقيقة، خذ راحة قصيرة، ثم اختبر نفسك من غير النظر للكتاب. رتّب المواد حسب أقرب امتحان.";
+ if(s.includes("برمج")||s.includes("كود")||s.includes("موقع"))return "ابدأ بـ HTML لبناء الصفحة، ثم CSS للشكل، ثم JavaScript للتفاعل. غيّر جزءًا صغيرًا في كل مرة واحفظ نسخة احتياطية قبل التعديلات الكبيرة.";
+ if(s.includes("مرحبا")||s.includes("اهلا")||s.includes("أهلا")||s.includes("سلام"))return "أهلاً بيك! 😄 أنا مساعد محلي داخل Ehab Pro. اختار سؤالًا من الأزرار أو اكتب سؤالك.";
+ if(s.includes("لعبة")||s.includes("العب"))return "افتح مركز الألعاب وجرّب تحدي المعلومات أو الحساب أو الذاكرة، وبعدها شوف نقاط الخبرة والإنجازات.";
+ if(s.includes("شكرا")||s.includes("شكرًا"))return "العفو يا بطل! استمر في الاستكشاف ✨";
+ return "أنا الإصدار المحلي البسيط من مساعد Ehab Pro، ومش عندي نموذج ذكاء اصطناعي كامل أو اتصال تلقائي بخدمات خارجية. جرّب سؤالًا عن المذاكرة أو البرمجة أو عملية حسابية.";
+}
+$("chat-form").addEventListener("submit",e=>{
+ e.preventDefault();const val=$("chat-input").value.trim();if(!val)return;
+ addMsg(val,"user");$("chat-input").value="";
+ addMsg(localAssistant(val),"");
+});
+root.querySelectorAll("[data-ehx-prompt]").forEach(b=>b.onclick=()=>{
+ $("chat-input").value=b.dataset.ehxPrompt;$("chat-form").requestSubmit();
+});
+/* Safe arithmetic parser: no eval and no Function */
+function calculate(input){
+ let s=String(input).replace(/\s/g,"");
+ if(!s||s.length>100||!/^[0-9.+\-*/^()%]+$/.test(s))return {ok:false};
+ let i=0;
+ function expr(){
+  let v=term();
+  while(s[i]==="+"||s[i]==="-"){const op=s[i++],n=term();v=op==="+"?v+n:v-n}
+  return v;
+ }
+ function term(){
+  let v=power();
+  while(s[i]==="*"||s[i]==="/"){
+   const op=s[i++],n=power();
+   if(op==="/"&&n===0)throw Error();
+   v=op==="*"?v*n:v/n;
+  }
+  return v;
+ }
+ function power(){
+  let v=unary();
+  if(s[i]==="^"){i++;v=Math.pow(v,power())}
+  return v;
+ }
+ function unary(){
+  if(s[i]==="+"){i++;return unary()}
+  if(s[i]==="-"){i++;return -unary()}
+  return atom();
+ }
+ function atom(){
+  if(s[i]==="("){i++;const v=expr();if(s[i++]!==")")throw Error();return v}
+  const start=i;while(/[0-9.]/.test(s[i]||"")&&i<s.length)i++;
+  if(start===i)throw Error();
+  const v=Number(s.slice(start,i));if(!Number.isFinite(v))throw Error();return v;
+ }
+ try{const v=expr();if(i!==s.length||!Number.isFinite(v)||Math.abs(v)>1e15)return {ok:false};return {ok:true,value:Number(v.toFixed(8))}}
+ catch(e){return {ok:false}}
+}
+$("calc").onclick=()=>{
+ const r=calculate($("calc-input").value);
+ $("calc-result").textContent=r.ok?"الناتج: "+r.value:"تعبير غير صالح. مثال: (12+8)*3";
+};
+/* Games */
+const area=$("game-area");
+const quiz=[
+ {q:"ما الكوكب المعروف بالكوكب الأحمر؟",a:["المريخ","الزهرة","عطارد"],correct:0},
+ {q:"كم ضلعًا للمثلث؟",a:["2","3","4"],correct:1},
+ {q:"ما ناتج 9 × 7؟",a:["56","63","72"],correct:1},
+ {q:"ما العضو الذي يضخ الدم؟",a:["الرئة","القلب","المعدة"],correct:1},
+ {q:"ما عاصمة مصر؟",a:["القاهرة","الإسكندرية","أسوان"],correct:0},
+ {q:"ما الغاز الذي تحتاجه النباتات في البناء الضوئي؟",a:["الأكسجين","النيتروجين","ثاني أكسيد الكربون"],correct:2}
+];
+let gameState=null;
+function gameButton(text,fn,cls){
+ const b=document.createElement("button");b.textContent=text;b.className=cls||"ehx-answer";b.onclick=fn;return b;
+}
+function startGame(kind){
+ gameState={kind,score:0,step:0,answer:null};
+ if(kind==="quiz"){showQuiz();return}
+ if(kind==="math"){
+  gameState.a=randInt(2,20);gameState.b=randInt(2,12);gameState.op=["+","-","×"][randInt(0,3)];
+  gameState.answer=gameState.op==="+"?gameState.a+gameState.b:gameState.op==="-"?gameState.a-gameState.b:gameState.a*gameState.b;
+  area.replaceChildren();heading("🔢 تحدي الحساب");
+  textLine("كم يساوي "+gameState.a+" "+gameState.op+" "+gameState.b+"؟");
+  const inp=document.createElement("input");inp.className="ehx-input";inp.inputMode="numeric";inp.placeholder="اكتب الناتج";
+  area.append(inp,gameButton("تحقق",()=>{
+   if(inp.dataset.done)return;inp.dataset.done="1";
+   if(Number(inp.value)===gameState.answer){textLine("إجابة صحيحة! +15 XP");d.stats.correct++;grantXP(15,"حل صحيح");}
+   else textLine("الإجابة الصحيحة: "+gameState.answer);
+   finishGame("math",Number(inp.value)===gameState.answer?15:0);
+  }));return;
+ }
+ if(kind==="guess"){
+  gameState.answer=randInt(1,10);
+  area.replaceChildren();heading("🎯 خمن الرقم");
+  textLine("أنا اخترت رقمًا من 1 إلى 10. عندك 3 محاولات.");
+  gameState.tries=0;
+  const inp=document.createElement("input");inp.type="number";inp.min=1;inp.max=10;inp.className="ehx-input";inp.placeholder="رقم من 1 إلى 10";
+  area.append(inp,gameButton("خمن",()=>{
+   if(gameState.tries>=3)return;
+   gameState.tries++;const n=Number(inp.value);
+   if(n===gameState.answer){textLine("صح! الرقم كان "+gameState.answer+" 🎉 +10 XP");grantXP(10,"تخمين صحيح");finishGame("guess",10);}
+   else if(gameState.tries>=3){textLine("خلصت المحاولات! الرقم كان "+gameState.answer);finishGame("guess",0)}
+   else textLine(n<gameState.answer?"الرقم أكبر!":"الرقم أصغر!");
+  }));return;
+ }
+ if(kind==="memory"){
+  const seq=Array.from({length:4},()=>String(randInt(1,9))).join(" ");
+  area.replaceChildren();heading("🧩 اختبار الذاكرة");
+  const display=document.createElement("div");display.className="ehx-big";display.textContent=seq;area.append(display);
+  const inp=document.createElement("input");inp.className="ehx-input";inp.placeholder="احفظ الأرقام واكتبها بالترتيب";
+  const check=gameButton("تحقق",()=>{
+   if(check.disabled)return;check.disabled=true;
+   if(inp.value.replace(/\s/g,"")===seq.replace(/\s/g,"")){textLine("ذاكرتك ممتازة! +20 XP");grantXP(20,"نجاح في الذاكرة");finishGame("memory",20)}
+   else{textLine("المحاولة انتهت. جرّب مرة أخرى!");finishGame("memory",0)}
+  });
+  area.append(inp,check);setTimeout(()=>{display.textContent="••••";},3500);return;
+ }
+}
+function randInt(min,max){return Math.floor(Math.random()*(max-min))+min}
+function heading(t){const h=document.createElement("h3");h.textContent=t;area.append(h)}
+function textLine(t){const p=document.createElement("p");p.textContent=t;area.append(p)}
+function showQuiz(){
+ const q=quiz[randInt(0,quiz.length)];
+ gameState.answer=q.correct;
+ area.replaceChildren();heading("🧠 تحدي المعلومات");textLine(q.q);
+ q.a.forEach((answer,i)=>area.append(gameButton(answer,()=>{
+  if(gameState.done)return;gameState.done=true;
+  if(i===q.correct){textLine("إجابة صحيحة! +15 XP 🎉");d.stats.correct++;grantXP(15,"إجابة صحيحة");finishGame("quiz",15)}
+  else{textLine("الإجابة الصحيحة: "+q.a[q.correct]);finishGame("quiz",0)}
+ })));
+}
+function finishGame(kind,xp){
+ d.stats.games++;d.history.unshift({kind,date:new Date().toLocaleDateString("ar-EG"),xp});
+ d.history=d.history.slice(0,20);
+ achievement("firstgame");
+ if(d.stats.correct>=5)achievement("quiz5");
+ save();render();renderLeaderboard();
+}
+root.querySelectorAll("[data-ehx-game]").forEach(b=>b.onclick=()=>startGame(b.dataset.ehxGame));
+/* Wheel */
+const prizes=[
+ {name:"10 عملات",coins:10,xp:0},{name:"20 XP",coins:0,xp:20},
+ {name:"15 عملة",coins:15,xp:0},{name:"5 XP",coins:0,xp:5},
+ {name:"25 عملة",coins:25,xp:0},{name:"30 XP",coins:0,xp:30},
+ {name:"حظ أوفر المرة القادمة",coins:0,xp:0},{name:"12 عملة",coins:12,xp:0}
+];
+const wheel=$("wheel"),wc=wheel.getContext("2d");
+let spinning=false,rotation=0;
+function drawWheel(){
+ const n=prizes.length,cx=150,cy=150,r=142;
+ wc.clearRect(0,0,300,300);
+ prizes.forEach((p,i)=>{
+  const a=rotation+i*2*Math.PI/n;
+  wc.beginPath();wc.moveTo(cx,cy);wc.arc(cx,cy,r,a,a+2*Math.PI/n);wc.closePath();
+  wc.fillStyle=["#2878c8","#7847c7","#12a88a","#d88a25"][i%4];wc.fill();
+  wc.save();wc.translate(cx,cy);wc.rotate(a+Math.PI/n);wc.fillStyle="white";wc.font="bold 11px Tahoma";wc.textAlign="right";wc.fillText(p.name, r-8,4);wc.restore();
+ });
+ wc.fillStyle="#fff";wc.beginPath();wc.arc(cx,cy,19,0,Math.PI*2);wc.fill();
+ wc.fillStyle="#081321";wc.textAlign="center";wc.font="bold 11px Tahoma";wc.fillText("E-PRO",cx,cy+4);
+ wc.fillStyle="#ffcf4b";wc.beginPath();wc.moveTo(150,0);wc.lineTo(137,23);wc.lineTo(163,23);wc.closePath();wc.fill();
+}
+drawWheel();
+$("spin").onclick=()=>{
+ if(spinning)return;
+ if(d.wheelDate===new Date().toLocaleDateString("en-CA")){
+  $("wheel-result").textContent="استخدمت لفتك اليومية بالفعل. ارجع بكرة!";return;
+ }
+ spinning=true;$("spin").disabled=true;
+ const winner=randInt(0,prizes.length),turns=5+Math.random()*3;
+ const start=rotation,target=rotation+turns*2*Math.PI+(2*Math.PI-winner*2*Math.PI/prizes.length);
+ const t0=performance.now(),duration=3000;
+ function anim(now){
+  const t=Math.min(1,(now-t0)/duration),ease=1-Math.pow(1-t,4);
+  rotation=start+(target-start)*ease;drawWheel();
+  if(t<1){requestAnimationFrame(anim);return}
+  spinning=false;$("spin").disabled=false;
+  const p=prizes[winner];d.wheelDate=new Date().toLocaleDateString("en-CA");d.wheelPrize=p.name;
+  d.coins+=p.coins;d.xp+=p.xp;d.stats.spins++;
+  if(!d.achievements.includes("wheel"))d.achievements.push("wheel");
+  save();render();
+  $("wheel-result").textContent="🎉 جائزتك: "+p.name+(p.coins?" — +"+p.coins+" عملة":"")+(p.xp?" — +"+p.xp+" XP":"");
+ }
+ requestAnimationFrame(anim);
+};
+/* Themes */
+const themes=[
+ {id:"blue",name:"أزرق نيون",price:0,bg:"#091321",panel:"#12223a",line:"#2b4262",accent:"#38d9ff"},
+ {id:"purple",name:"بنفسجي مجري",price:30,bg:"#140d25",panel:"#281742",line:"#56356e",accent:"#df9bff"},
+ {id:"green",name:"غابة نيون",price:30,bg:"#071a16",panel:"#10372d",line:"#27664f",accent:"#4fffc1"},
+ {id:"sunset",name:"غروب",price:50,bg:"#24111b",panel:"#40202c",line:"#7b3d45",accent:"#ffb36b"},
+ {id:"gold",name:"الأسطورة الذهبية",price:80,bg:"#171307",panel:"#30270d",line:"#66511d",accent:"#ffd65e"}
+];
+function renderThemes(){
+ const list=$("theme-list");if(!list)return;list.replaceChildren();
+ themes.forEach(t=>{
+  const card=document.createElement("div");card.className="ehx-card";
+  const sample=document.createElement("div");sample.className="ehx-theme";sample.style.background=t.bg;sample.style.borderColor=t.accent;
+  const h=document.createElement("b");h.textContent=t.name;
+  const p=document.createElement("p");p.textContent=t.price===0?"مجاني":t.price+" عملة";
+  const b=document.createElement("button");
+  const owned=d.ownedThemes.includes(t.id);
+  b.textContent=d.theme===t.id?"مُفعّل":owned?"تفعيل": "فتح الثيم";
+  b.disabled=d.theme===t.id;
+  b.onclick=()=>{
+   if(!d.ownedThemes.includes(t.id)){
+    if(d.coins<t.price){$("theme-status").textContent="تحتاج "+t.price+" عملة لفتح الثيم.";return}
+    d.coins-=t.price;d.ownedThemes.push(t.id);
+   }
+   d.theme=t.id;applyTheme();save();render();
+   $("theme-status").textContent="تم تفعيل "+t.name+"!";
+  };
+  card.append(sample,h,p,b);list.append(card);
+ });
+}
+function applyTheme(){
+ const t=themes.find(x=>x.id===d.theme)||themes[0];
+ root.style.setProperty("--bg",t.bg);root.style.setProperty("--panel",t.panel);
+ root.style.setProperty("--line",t.line);root.style.setProperty("--accent",t.accent);
+}
+$("nickname").value=d.nickname||"";
+$("nickname").addEventListener("change",()=>{d.nickname=$("nickname").value.trim().slice(0,24);save()});
+$("make-challenge").onclick=()=>{
+ d.nickname=$("nickname").value.trim().slice(0,24)||"لاعب";
+ const type=$("challenge-type").value;
+ const names={quiz:"تحدي المعلومات",math:"تحدي الحساب",memory:"اختبار الذاكرة",typing:"سرعة الكتابة"};
+ const text="🏆 تحدي Ehab Pro!\nاللاعب: "+d.nickname+"\nالتحدي: "+names[type]+"\nالمستوى: "+level()+"\nXP: "+d.xp+"\nأفضل نتيجة محلية: "+d.stats.correct+" إجابة صحيحة\nالعب التحدي من هنا:\n"+location.href+"\nمين هيجيب نتيجة أعلى؟";
+ $("challenge-text").value=text;save();
+};
+$("share").onclick=async()=>{
+ const text=$("challenge-text").value;
+ if(!text){msg("أنشئ التحدي أولًا.");return}
+ try{
+  if(navigator.share)await navigator.share({title:"تحدي Ehab Pro",text});
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);msg("تم نسخ التحدي. ابعته لصاحبك!")}
+  else{$("challenge-text").focus();$("challenge-text").select();msg("حدد النص وانسخه يدويًا.")}
+ }catch(e){msg("لو المشاركة اتلغت، انسخ نص التحدي يدويًا.")}
+};
+function renderLeaderboard(){
+ const box=$("leaderboard");if(!box)return;box.replaceChildren();
+ if(!d.history.length){box.textContent="لسه مفيش نتائج محفوظة.";return}
+ d.history.slice(0,8).forEach((h,i)=>{
+  const p=document.createElement("div");p.className="ehx-card";
+  p.textContent=(i+1)+". "+({quiz:"معلومات",math:"حساب",guess:"تخمين",memory:"ذاكرة",typing:"كتابة"}[h.kind]||h.kind)+" — "+h.date+" — "+h.xp+" XP";
+  box.append(p);
+ });
+}
+/* Typing speed */
+let typePhrase="",typeStarted=0;
+const phrases=["النجاح يحتاج إلى صبر وممارسة.","أنا أتعلم البرمجة خطوة بخطوة.","كل يوم فرصة لتعلم شيء جديد."];
+$("type-start").onclick=()=>{
+ typePhrase=phrases[randInt(0,phrases.length)];typeStarted=Date.now();
+ $("type-prompt").textContent=typePhrase;$("type-input").value="";$("type-input").focus();$("type-result").textContent="اكتب الجملة كما هي ثم اضغط تحقق.";
+};
+$("type-check").onclick=()=>{
+ if(!typePhrase||!typeStarted){$("type-result").textContent="اضغط ابدأ الاختبار أولًا.";return}
+ const input=$("type-input").value.trim(),seconds=Math.max(1,(Date.now()-typeStarted)/1000);
+ if(!input){$("type-result").textContent="اكتب الجملة أولًا.";return}
+ let correct=0;for(let i=0;i<Math.min(input.length,typePhrase.length);i++)if(input[i]===typePhrase[i])correct++;
+ const accuracy=Math.round(correct/Math.max(input.length,typePhrase.length)*100);
+ const wpm=Math.round(input.length/5/(seconds/60));
+ $("type-result").textContent="السرعة التقريبية: "+wpm+" كلمة/دقيقة — الدقة: "+accuracy+"%";
+ d.history.unshift({kind:"typing",date:new Date().toLocaleDateString("ar-EG"),xp:accuracy>=80?15:5});
+ d.history=d.history.slice(0,20);
+ if(accuracy>=80){grantXP(15,"اختبار كتابة جيد");achievement("typing")}
+ else{grantXP(5,"تجربة الكتابة")}
+ renderLeaderboard();
+ typePhrase="";typeStarted=0;
+};
+/* Notes */
+$("notes").value=d.notes||"";
+$("notes-save").onclick=()=>{
+ d.notes=$("notes").value;save();$("notes-status").textContent=" تم الحفظ على هذا الجهاز.";
+};
+/* Timer */
+let timerTotal=1500,timerRemain=1500,timerId=null,timerEnd=0;
+function showTimer(){
+ const m=Math.floor(timerRemain/60),s=timerRemain%60;
+ $("timer-display").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}}
+root.querySelectorAll("[data-ehx-minutes]").forEach(b=>b.onclick=()=>{
+ stopTimer();timerTotal=Number(b.dataset.ehxMinutes)*60;timerRemain=timerTotal;showTimer();$("timer-status").textContent="تم ضبط المؤقت.";
+});
+$("timer-start").onclick=()=>{
+ if(timerId)return;
+ timerEnd=Date.now()+timerRemain*1000;
+ timerId=setInterval(()=>{
+  timerRemain=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));showTimer();
+  if(timerRemain<=0){stopTimer();$("timer-status").textContent="انتهى الوقت! أحسنت 🎉";grantXP(10,"جلسة تركيز");achievement("focus")}
+ },250);
+ $("timer-status").textContent="ابدأ التركيز الآن!";
+};
+$("timer-pause").onclick=()=>{
+ if(timerId){timerRemain=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));stopTimer();showTimer();$("timer-status").textContent="تم الإيقاف المؤقت."}
+};
+$("timer-reset").onclick=()=>{stopTimer();timerRemain=timerTotal;showTimer();$("timer-status").textContent="تمت إعادة المؤقت."};
+root.querySelectorAll("[data-ehx-minutes]").forEach(b=>b.title="اختيار مدة المؤقت");
+/* Unit conversion */
+$("unit-convert").onclick=()=>{
+ const n=Number($("unit-value").value);if(!Number.isFinite(n)){$("unit-result").textContent="اكتب رقمًا صحيحًا.";return}
+ const k=$("unit-type").value;
+ const result={km:n*1000,m:n*100,kg:n*1000,hr:n*60,c:n*9/5+32}[k];
+ const units={km:"متر",m:"سنتيمتر",kg:"جرام",hr:"دقيقة",c:"فهرنهايت"};
+ $("unit-result").textContent="النتيجة: "+Number(result.toFixed(6))+" "+units[k];
+};
+/* Easter eggs */
+$("secret-check").onclick=()=>{
+ const code=$("secret-input").value.trim().toUpperCase();
+ const secrets={
+  EHAB:{message:"🎉 سر إيهاب اتفتح! +25 XP",xp:25},
+  GAMER:{message:"🎮 لقب اللاعب السري! +20 XP",xp:20},
+  PRO:{message:"👑 وصلت لسر المحترفين! +30 XP",xp:30}
+ };
+ const item=secrets[code];
+ if(!item){$("secret-result").textContent="مش دي الكلمة. جرّب تاني وشوف التلميحات!";return}
+ const id="secret_"+code;
+ if(d.achievements.includes(id)){$("secret-result").textContent="اكتشفت السر ده قبل كده!";return}
+ d.achievements.push(id);d.stats.secrets++;
+ d.xp+=item.xp;d.coins+=Math.floor(item.xp/5);
+ if(!d.achievements.includes("secret"))d.achievements.push("secret");
+ save();render();$("secret-result").textContent=item.message;
+};
+/* Backup only for this expansion */
+$("export").onclick=()=>{
+ const blob=new Blob([JSON.stringify({app:"EhabProUltimateExpansion",version:1,data:d},null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="ehab-pro-ultimate-backup.json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+};
+$("import-btn").onclick=()=>$("import-file").click();
+$("import-file").onchange=async()=>{
+ const file=$("import-file").files&&$("import-file").files[0];if(!file)return;
+ try{
+  const obj=JSON.parse(await file.text());
+  if(obj.app!=="EhabProUltimateExpansion"||!obj.data||typeof obj.data!=="object")throw Error("invalid");
+  if(!confirm("استيراد نسخة الإضافة سيستبدل تقدم الإضافة الحالية فقط. هل تريد المتابعة؟"))return;
+  const v=obj.data;
+  if(!Number.isFinite(v.xp)||!Number.isFinite(v.coins)||!Array.isArray(v.achievements))throw Error("invalid");
+  d={...fresh(),...v,stats:{...fresh().stats,...(v.stats||{})}};
+  save();applyTheme();render();$("notes").value=d.notes||"";
+  msg("تم استيراد بيانات الإضافة.");
+ }catch(e){msg("الملف غير صالح أو ليس نسخة احتياطية من هذه الإضافة.")}
+ $("import-file").value="";
+};
+function updateWheelButton(){
+ const used=d.wheelDate===new Date().toLocaleDateString("en-CA");
+ $("spin").disabled=used;
+ if(used)$("wheel-result").textContent="لفّيت العجلة اليوم. جائزتك السابقة: "+(d.wheelPrize||"تم الاستلام")+". ارجع بكرة!";
+}
+applyTheme();render();showTimer();updateWheelButton();
+})();
+</script>
+<!-- End Ehab Pro Ultimate Expansion -->
+
 </body>
 </html>
